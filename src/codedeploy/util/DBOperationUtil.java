@@ -215,10 +215,12 @@ public class DBOperationUtil {
     }
 
     private ResultSet queryHost_help(int id,int type,Connection conn){
-        String tablename[]={"","","","LocalHost","TestHost","ProductHost","ProductHost"};
+        String tablename[]={"","","","`LocalHost`","`TestHost`","`ProductHost`","`ProductHost`"};//此处与Constants中的常量绑定，修改Constants则此处也需要修改
         String idname[]={"","","","LID","TID","PID","GID"};
         try {
             String sql="select * from "+tablename[type]+" where "+idname[type]+" = "+id;
+            if(id==-1)
+                sql="select all from "+tablename[type];
             Statement stat=conn.createStatement();
             ResultSet rs=stat.executeQuery(sql);
             return rs;

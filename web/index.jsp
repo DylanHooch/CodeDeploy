@@ -16,11 +16,20 @@
       <script src="jquery-3.2.1.js"></script>
   </head>
   <body>
-  <div style="margin:40px; font-weight:bold">
-    登录成功，欢迎您！
   </div>
   <div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;" id="hostlist">
+        <s:iterator value="groups" status="st_root">
+          <sx:tree label="localhost" id="treeroot" showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected" >
+            <s:iterator value="groups[#st_root.count]" status="st" id="host_in_group">
+                <sx:treenode label="groups[st_root].address" >
+                    <sx:treenode label=<s:property value="host_in_group"/> >
+
+                    </sx:treenode>
+                </sx:treenode>
+            </s:iterator>
+          </sx:tree>
+        </s:iterator>
     </div>
     <div style="width:500px;height:1000px;float:left;" id="simpleorderlist">
         <H3>sx:tree的使用</H3>
