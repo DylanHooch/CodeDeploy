@@ -12,4 +12,7 @@
             <result name="login">/login.jsp</result>
         </action>
     </package>
+    <package name="default" extends="struts-default" >
+        <action name=""
+    </package>
 </struts>
