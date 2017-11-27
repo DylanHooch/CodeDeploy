@@ -17,5 +17,9 @@
             <taglib-uri>/struts-tags</taglib-uri>
             <taglib-location>WEB-INF/struts-tags.tld</taglib-location>
         </taglib>
+        <taglib>
+            <taglib-uri>/struts-dojo-tags</taglib-uri>
+            <taglib-location>WEB-INF/struts-dojo-tags.tld</taglib-location>
+        </taglib>
     </jsp-config>
 </web-app>

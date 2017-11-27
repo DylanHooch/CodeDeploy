@@ -27,5 +27,8 @@
   
     </div>
   </div>
+  <script>
+    $.post("login.jsp");
+  </script>
   </body>
 </html>
