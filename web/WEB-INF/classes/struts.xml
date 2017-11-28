@@ -13,6 +13,10 @@
         </action>
     </package>
     <package name="default" extends="struts-default" >
-        <action name=""
+        <action name="welcome_*" class="codedeploy.action.FunctionSelectAction" method="{1}">
+            <result name="success">/index.jsp</result>
+            <result name="manageorder">/manageOrder.jsp</result>
+            <result name="managehost">/managehost.jsp</result>
+        </action>
     </package>
 </struts>

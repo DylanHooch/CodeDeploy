@@ -10,23 +10,23 @@ import java.util.List;
 public class CodeDeploySystem {
     private int status;
     private int dataBaseStatus;
-    public int CreateOrder(DeployOrder order)
+    public static int createOrder(DeployOrder order)
     {
         return Constants.SUCCESS;
     }
-    public int Rollback()
+    public static int rollback()
     {
         return Constants.SUCCESS;
     }
-    public int ReleaseOrder(DeployOrder order)
+    public static int releaseOrder(DeployOrder order)
     {
         return Constants.SUCCESS;
     }
-    public int createRelation(List<TestHost> tHostList, List<PHostGroup> groupList)
+    public static int createRelation(List<TestHost> tHostList, List<PHostGroup> groupList)
     {
         return Constants.SUCCESS;
     }
-    public int updateRelation(List<TestHost> tHostList,List<PHostGroup> groupList)
+    public static int updateRelation(List<TestHost> tHostList,List<PHostGroup> groupList)
     {
         return Constants.SUCCESS;
     }
