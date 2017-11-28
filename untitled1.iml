@@ -27,5 +27,6 @@
     <orderEntry type="library" name="mysql-connector-java-5.1.42-bin" level="project" />
     <orderEntry type="library" name="commons-codec-1.10" level="project" />
     <orderEntry type="library" name="struts2-dojo-plugin-2.3.34" level="project" />
+    <orderEntry type="library" name="struts2-json-plugin-2.3.34" level="project" />
   </component>
 </module>

@@ -18,5 +18,7 @@
             <result name="manageorder">/manageOrder.jsp</result>
             <result name="managehost">/managehost.jsp</result>
         </action>
+        <action name="dynamicTreeAction" class="codedeploy.action.DynamicTreeAction" method="execute">
+        </action>
     </package>
 </struts>
