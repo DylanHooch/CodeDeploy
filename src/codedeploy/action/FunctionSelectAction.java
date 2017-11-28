@@ -39,20 +39,13 @@ public class FunctionSelectAction extends ActionSupport{
         return SUCCESS;
     }
 
-    public String viewOrders() throws Exception{
-        return SUCCESS;
-    }
-
-    public String createOrders() throws Exception{
-        return SUCCESS;
+    public String manageOrders() throws Exception{
+        return "manageorder";
     }
 
     public String manageHost() throws Exception{
-        return SUCCESS;
+        return "managehost";
     }
 
-    public String rollBack() throws Exception{
-        return SUCCESS;
-    }
 
 }
