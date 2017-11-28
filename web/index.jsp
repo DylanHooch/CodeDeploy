@@ -13,31 +13,21 @@
     <title>T</title>
       <s:head theme="xhtml" />
       <sx:head parseContent="true" />
-      <script src="jquery-3.2.1.js"></script>
   </head>
   <body>
+
+  <div style="width:800px;height:100px">
+      <H1>Welcome</H1>
   </div>
   <div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;" id="hostlist">
-        <s:iterator value="groups" status="st_root">
-          <sx:tree label="localhost" id="treeroot" showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected" >
-            <s:iterator value="groups[#st_root.count]" status="st" id="host_in_group">
-                <sx:treenode label="groups[st_root].address" >
-                    <sx:treenode label=<s:property value="host_in_group"/> >
-
-                    </sx:treenode>
-                </sx:treenode>
-            </s:iterator>
-          </sx:tree>
-        </s:iterator>
+        <s:include value="tree.jsp"/>
     </div>
-    <script>
-        
-    </script>
-    <div style="width:500px;height:1000px;float:left;" id="simpleorderlist">
-        <H3>sx:tree的使用</H3>
-  
-    </div>
+      <div style="width:500px;height:200px;float:left;"
+      <div style="width:500px;height:200px;float:left;" id="simpleorderlist">
+            <s:include value="recentOrderChart.html"/>
+      </div>
+      <iv
   </div>
   </body>
 </html>

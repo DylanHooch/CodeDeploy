@@ -6,6 +6,7 @@ import java.util.List;
 
 public class DeployOrder {
     private int ono;
+    private String name;
     private Date date;
     private TestHost targetTHost;
     private PHostGroup targetGroup;
@@ -22,7 +23,7 @@ public class DeployOrder {
         this.codePathList=codePathList;
         this.isReleased=isReleased;
     }
-    public DeployOrder(int ono, Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,List<Integer> codeIDList,boolean isReleased)
+    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,List<Integer> codeIDList,boolean isReleased)
     {
         this.ono=ono;
         this.codeIDList=codeIDList;
@@ -31,6 +32,7 @@ public class DeployOrder {
         this.targetGroup=pHostGroup;
         this.codePathList=codePathList;
         this.isReleased=isReleased;
+        this.name=name;
     }
     public void setId(int ono)
     {
@@ -79,6 +81,14 @@ public class DeployOrder {
 
     public void setCodePathList(List<String> codePathList) {
         this.codePathList = codePathList;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isReleased() {

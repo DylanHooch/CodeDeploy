@@ -7,6 +7,15 @@
         <element id="directory" name="classes">
           <element id="module-output" name="untitled1" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="struts2-dojo-plugin-2.3.34" />
+          <element id="library" level="project" name="struts2" />
+          <element id="library" level="project" name="commons-io-2.2" />
+          <element id="library" level="project" name="commons-lang3-3.2" />
+          <element id="library" level="project" name="jsch-0.1.54" />
+          <element id="library" level="project" name="mysql-connector-java-5.1.42-bin" />
+          <element id="library" level="project" name="commons-codec-1.10" />
+        </element>
       </element>
     </root>
   </artifact>

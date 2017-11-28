@@ -39,7 +39,7 @@ public class FunctionSelectAction extends ActionSupport{
         return SUCCESS;
     }
 
-    public String manageOrders() throws Exception{
+    public String manageOrder() throws Exception{
         return "manageorder";
     }
 

@@ -13,6 +13,13 @@
         </action>
     </package>
     <package name="default" extends="struts-default" >
-        <action name=""
+        <action name="select_*" class="codedeploy.action.FunctionSelectAction" method="{1}">
+            <result name="success">/index.jsp</result>
+            <result name="manageorder">/orderManagement.jsp</result>
+            <result name="managehost">/managehost.jsp</result>
+        </action>
+        <action name="dynamicTreeAction" class="codedeploy.action.DynamicTreeActionTest" method="execute">
+        </action>
+
     </package>
 </struts>

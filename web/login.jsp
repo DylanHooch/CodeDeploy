@@ -20,10 +20,11 @@
             label="登录名称"/>
             <s:password name="password" style="font-size:12px;width:120px;"
             label="登录密码"/>
-            <s:submit value=" 登 录 3232"/>
+            <s:submit value=" 登 录 "/>
             </s:form>
         </div>
         </div>
     </div>
+
 </body>
 </html>

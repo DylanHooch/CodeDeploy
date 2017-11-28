@@ -1,0 +1,130 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My First Page!</title>
+    <style>
+        p{
+            color : blue;
+        }
+        h1{
+            text-align:middle;
+            color:yellow;
+        }
+        table, th, td
+        {
+            border-collapse:collapse;
+            border: 1px solid black;
+            text-align:middle;
+            padding:2px;
+        }
+        th{
+            color:#5F9EA0
+        }
+        td{
+            color:#5F9EA0
+        }
+        }
+        .blue_button
+        {
+            background-color:#008CBA；
+            color:#008CBA;
+        }
+        .div_withBd
+        {
+            position:relative;
+            border: 1px solid black;
+            padding:5px;
+            width:fit-content;
+            height:fit-content;
+        }
+        .ul_inlineright
+        {
+            position:absolute;
+            display: inline-block;
+            right:0px;
+            bottom:0px;
+        }
+        .ul_inline li
+        {
+            display: inline;
+        }
+        .div_rightB
+        {
+            position:absolute;
+            right:0px;
+            bottom:0px;
+            padding:5px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <div><font size="5" color="blue">订单管理</font></div>
+    <div class="div_withBd">
+        订单名称:<input type="text" name="order_name" >
+        是否发布:
+        <select>
+            <option value="all" style=:display:none">全部</option>
+            <option value="yes" style=:display:none">是</option>
+            <option value="no" style=:display:none">否</option>
+        </select>
+        <button class="blue_button" type="button" onclick="alert('查询')">查询</button>
+        <button class="blue_button" type="button" onclick="alert('重置')">重置</button>
+        </br>
+        <button class="blue_button" type="button" onclick="alert('增加')">增加</button>
+        <button class="blue_button" type="button" onclick="alert('发布')">发布</button>
+        <button class="blue_button" type="button" onclick="alert('回滚')">回滚</button>
+        <button class="blue_button" type="button" onclick="alert('删除')">删除</button>
+        <button class="blue_button" type="button" onclick="alert('刷新')">刷新</button>
+        <button class="blue_button" type="button" onclick="alert('检测')">检测</button>
+        <table>
+            <tr>
+                <th>选择</th>
+                <th>订单名称</th>
+                <th>订单描述</th>
+                <th>目标机备份</th>
+                <th>发布状态</th>
+                <th>回滚状态</th>
+                <th>创建者</th>
+                <th>订单创建日期</th>
+                <th>最新执行时间</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td><input type="radio" checked="checked" value="TRUE" /></td>
+                <td>订购景栓上门</td>
+                <td>VIP订单</td>
+                <td>无备份</td>
+                <td>已发布</td>
+                <td>未回滚</td>
+                <td>C12各基佬</td>
+                <td>2017/11/27</td>
+                <td>2017/11/27</td>
+                <td><a href="1.jpg">啪啪啪</a></td>
+
+            </tr>
+        </table>
+
+        <p>共1条记录 1/1页
+            <select>
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </p>
+        <div class="div_rightB">
+            <ul class="ul_inline">
+                <li><a href="#">«</a></li>
+                <li><a href="#">1</a></li>
+                <li><a class="active" href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    </main>
+</body>
+</html>

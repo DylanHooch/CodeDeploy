@@ -16,12 +16,12 @@ public class DBOperationUtil {
     {
         if(connection==null) {
             String driverName = "com.mysql.jdbc.Driver";
-            String dbURL = "jdbc:mysql://rm-wz9dxgtjy3jzb6qdlo.mysql.rds.aliyuncs.com:3306";
+            String dbURL = "jdbc:mysql://rm-wz9h00p5lzhh2mkbjao.mysql.rds.aliyuncs.com:3306";
             String sqltype = "mysql";
             try {
 
                 Class.forName(driverName);
-                Connection dbConn = DriverManager.getConnection(dbURL, "qgg", "123456");
+                Connection dbConn = DriverManager.getConnection(dbURL, "root", "123456qwerty!");
                 return dbConn;
 
             } catch (Exception e)
@@ -52,13 +52,13 @@ public class DBOperationUtil {
                 Columnname=new String[ColumnCount];
                 for(int j=0;j<ColumnCount;j++)
                     Columnname[j]=rs.getMetaData().getColumnName(j+1);
-
                 while(rs.next())
                 {
                     int ono=rs.getInt("ONO");
                     java.util.Date date=rs.getTimestamp("ODate");
                     TestHost testHost=(TestHost)queryHost(rs.getInt("targetTHost"),Constants.TESTHOST).get(0);
                     PHostGroup targetGroup=(PHostGroup)queryGroup(rs.getInt("targetGroup"));
+                    String name=rs.getString("OName");
                     List<Code> codeList=queryCode(-1,null,-1,null,ono);
                     List<String> codePathList=new ArrayList<>(codeList.size());
                     List<Integer> codeIDList=new ArrayList<>(codeList.size());
@@ -68,7 +68,7 @@ public class DBOperationUtil {
                         codeIDList.add(codeList.get(i).getCno());
                     }
                     boolean isReleased=rs.getBoolean("isReleased");
-                    dporders.add(new DeployOrder(ono,date,testHost,targetGroup,codePathList,codeIDList,isReleased));
+                    dporders.add(new DeployOrder(ono,name,date,testHost,targetGroup,codePathList,codeIDList,isReleased));
                 }
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -84,16 +84,73 @@ public class DBOperationUtil {
         {	SQL="SELECT * FROM `codedeployment`.`Orders` ORDER BY `日期` DESC  LIMIT 0,?;";
             try {
                 pst =dbconn.prepareStatement(SQL,Statement.RETURN_GENERATED_KEYS);
-                rs=pst.executeQuery();
                 pst.setInt(1, dayNum);
                 rs=pst.executeQuery();
+                while(rs.next())
+                {
+                    int ono=rs.getInt("ONO");
+                    java.util.Date date=rs.getTimestamp("ODate");
+                    TestHost testHost=(TestHost)queryHost(rs.getInt("targetTHost"),Constants.TESTHOST).get(0);
+                    PHostGroup targetGroup=(PHostGroup)queryGroup(rs.getInt("targetGroup"));
+                    String name=rs.getString("OName");
+                    List<Code> codeList=queryCode(-1,null,-1,null,ono);
+                    List<String> codePathList=new ArrayList<>(codeList.size());
+                    List<Integer> codeIDList=new ArrayList<>(codeList.size());
+                    for(int i=0;i<codePathList.size();i++)
+                    {
+                        codePathList.add(codeList.get(i).getFilePath());
+                        codeIDList.add(codeList.get(i).getCno());
+                    }
+                    boolean isReleased=rs.getBoolean("isReleased");
+                    dporders.add(new DeployOrder(ono,name,date,testHost,targetGroup,codePathList,codeIDList,isReleased));
+                }
+
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                return null;
             }
 
+            return dporders;
+        }
+    }
+
+    public List<DeployOrder> queryOrderByName(String name)
+    {
+        String SQL;
+        Connection dbconn=this.connectDB();
+        ResultSet   rs = null;
+        PreparedStatement pst;
+        List<DeployOrder> dporders=new ArrayList();
+        SQL="SELECT * FROM `codedeployment`.`Orders` WHERE OName = ? ORDER BY `日期` DESC;";
+        try {
+            pst =dbconn.prepareStatement(SQL,Statement.RETURN_GENERATED_KEYS);
+            pst.setString(1, name);
+            rs=pst.executeQuery();
+            while(rs.next())
+            {
+                int ono=rs.getInt("ONO");
+                java.util.Date date=rs.getTimestamp("ODate");
+                TestHost testHost=(TestHost)queryHost(rs.getInt("targetTHost"),Constants.TESTHOST).get(0);
+                PHostGroup targetGroup=(PHostGroup)queryGroup(rs.getInt("targetGroup"));
+                List<Code> codeList=queryCode(-1,null,-1,null,ono);
+                List<String> codePathList=new ArrayList<>(codeList.size());
+                List<Integer> codeIDList=new ArrayList<>(codeList.size());
+                for(int i=0;i<codePathList.size();i++)
+                {
+                    codePathList.add(codeList.get(i).getFilePath());
+                    codeIDList.add(codeList.get(i).getCno());
+                }
+                boolean isReleased=rs.getBoolean("isReleased");
+                dporders.add(new DeployOrder(ono,name,date,testHost,targetGroup,codePathList,codeIDList,isReleased));
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
             return null;
         }
+        return dporders;
     }
 
 
