@@ -277,7 +277,7 @@ public class DBOperationUtil {
         try {
             String sql="select * from "+tablename[type]+" where "+idname[type]+" = "+id;
             if(id==-1)
-                sql="select all from "+tablename[type];
+                sql="select * from "+tablename[type];
             Statement stat=conn.createStatement();
             ResultSet rs=stat.executeQuery(sql);
             return rs;
@@ -285,6 +285,12 @@ public class DBOperationUtil {
             e.printStackTrace();
         }
         return null;
+    }
+    public List<Host> queryAllHost(){
+        List<Host> list=queryHost(-1,Constants.LOCALHOST);
+        list.addAll(queryHost(-1,Constants.PRODUCTHOST));
+        list.addAll(queryHost(-1,Constants.TESTHOST));
+        return list;
     }
     //一次查询所有的生产主机组
     public List<PHostGroup> queryGroup()

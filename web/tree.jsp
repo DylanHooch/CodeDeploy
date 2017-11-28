@@ -18,7 +18,7 @@
 <script type="text/javascript">
     tree = new dTree('tree');//创建一个对象.
     $.ajax({
-        url:"dynamicTreeAction",
+        url:"dynamicTreeAction.action",
         type:'post', //数据发送方式
         dataType:'xml', //接受数据格式
         error:function(json){

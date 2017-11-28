@@ -10,24 +10,27 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <html>
   <head>
-    <title>T</title>
+    <title>智能部署上线系统</title>
       <s:head theme="xhtml" />
       <sx:head parseContent="true" />
   </head>
   <body>
 
   <div style="width:800px;height:100px">
-      <H1>Welcome</H1>
+      <H1>智能部署上线系统</H1>
   </div>
   <div style="width:800px;height:1000px;">
-    <div style="width:300px;height:1000px;float:left;" id="hostlist">
-        <s:include value="tree.jsp"/>
-    </div>
-      <div style="width:500px;height:200px;float:left;"
+      <div style="width:300px;height:1000px;float:left;">
+          <div style="width:300px;height:400px;float:left;" id="hostlist">
+              <s:include value="tree.jsp"/>
+          </div>
+          <div style="width:500px;height:50px;float:left">
+              <a href="/hostins" >主机管理</a>
+          </div>
+      </div>
       <div style="width:500px;height:200px;float:left;" id="simpleorderlist">
             <s:include value="recentOrderChart.html"/>
       </div>
-      <iv
   </div>
   </body>
 </html>
