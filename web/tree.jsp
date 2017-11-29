@@ -9,9 +9,9 @@
 <html>
 <head>
     <title>树形结构___ajax请求方式</title>
-    <script type="text/javascript" src="dtree.js"></script>
-    <script type="text/javascript" src="jquery-3.2.1.js"></script>
-    <link rel="stylesheet" href="dtree.css" type="text/css"></link>
+    <script type="text/javascript" src="js/dtree.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" href="css/dtree.css" type="text/css"></link>
 
 </head>
 <body>

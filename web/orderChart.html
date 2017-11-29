@@ -1,59 +1,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My First Page!</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <style>
-        p{
-            color : blue;
+        p {
+            color: blue;
         }
-        h1{
-            text-align:middle;
-            color:yellow;
+
+        h1 {
+            text-align: middle;
+            color: yellow;
         }
-        table, th, td
-        {
-            border-collapse:collapse;
+
+        table, th, td {
+            border-collapse: collapse;
             border: 1px solid black;
-            text-align:middle;
-            padding:2px;
+            text-align: middle;
+            padding: 2px;
         }
-        th{
-            color:#5F9EA0
+
+        th {
+            color: #5F9EA0
         }
-        td{
-            color:#5F9EA0
+
+        td {
+            color: #5F9EA0
         }
+
+
+        .blue_button {
+            background-color: #008CBA；
+            color: #008CBA;
         }
-        .blue_button
-        {
-            background-color:#008CBA；
-            color:#008CBA;
-        }
-        .div_withBd
-        {
-            position:relative;
+
+        .div_withBd {
+            position: relative;
             border: 1px solid black;
-            padding:5px;
-            width:fit-content;
-            height:fit-content;
+            padding: 5px;
+            width: fit-content;
+            height: fit-content;
         }
-        .ul_inlineright
-        {
-            position:absolute;
+
+        .ul_inlineright {
+            position: absolute;
             display: inline-block;
-            right:0px;
-            bottom:0px;
+            right: 0px;
+            bottom: 0px;
         }
-        .ul_inline li
-        {
+
+        .ul_inline li {
             display: inline;
         }
-        .div_rightB
-        {
-            position:absolute;
-            right:0px;
-            bottom:0px;
-            padding:5px;
+
+        .div_rightB {
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+            padding: 5px;
         }
     </style>
 </head>
@@ -61,17 +64,17 @@
 <main>
     <div><font size="5" color="blue">订单管理</font></div>
     <div class="div_withBd">
-        订单名称:<input type="text" name="order_name" >
+        订单名称:<input type="text" name="order_name">
         是否发布:
         <select>
             <option value="all" style=:display:none">全部</option>
             <option value="yes" style=:display:none">是</option>
             <option value="no" style=:display:none">否</option>
         </select>
-        <button class="blue_button" type="button" onclick="alert('查询')">查询</button>
+        <button class="btn" data-toggle="modal" data-target="#exampleModal">查询</button>
         <button class="blue_button" type="button" onclick="alert('重置')">重置</button>
         </br>
-        <button class="blue_button" type="button" onclick="alert('增加')">增加</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createOrder">增加</button>
         <button class="blue_button" type="button" onclick="alert('发布')">发布</button>
         <button class="blue_button" type="button" onclick="alert('回滚')">回滚</button>
         <button class="blue_button" type="button" onclick="alert('删除')">删除</button>
@@ -91,7 +94,7 @@
                 <th>操作</th>
             </tr>
             <tr>
-                <td><input type="radio" checked="checked" value="TRUE" /></td>
+                <td><input type="radio" checked="checked" value="TRUE"/></td>
                 <td>订购景栓上门</td>
                 <td>VIP订单</td>
                 <td>无备份</td>
@@ -125,6 +128,33 @@
             </ul>
         </div>
     </div>
-    </main>
+</main>
+
+
+<!-- Modal -->
+<div class="modal fade" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createOrderLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <!--一个叉 -->
+                    &times;
+                </button>
+                <h4 class="modal-title" id="createOrderLabel">创建新订单</h4>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
