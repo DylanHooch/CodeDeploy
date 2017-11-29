@@ -15,8 +15,9 @@
     <sx:head parseContent="true"/>
     <!-- include compliled bootstrap plugins-->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/popper.js"></script>
+    <script src="js/jquery-3.2.1.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <s:head theme="simple"/>
 </head>
 <body>
 <div style="width:800px;height:100px">
@@ -34,6 +35,7 @@
     <div style="width:500px;height:200px;float:left;" id="simpleorderlist">
         <s:include value="recentOrderChart.html"/>
     </div>
+
 </div>
 </body>
 </html>
