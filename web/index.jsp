@@ -26,7 +26,9 @@
 <div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;">
         <div style="width:300px;height:400px;float:left;" id="hostlist">
-            <s:include value="tree.jsp"/>
+            <s:include value="tree.jsp">
+                <s:param name="param" value="'lol'"/>
+            </s:include>
         </div>
         <div style="width:500px;height:50px;float:left">
             <a href="/hostins">主机管理</a>
