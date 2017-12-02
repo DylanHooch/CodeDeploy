@@ -157,7 +157,7 @@ public class DBOperationUtil {
         //先插订单
         try {
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            pst.setInt(1, order.getOno());
+            pst.setString(1, "null");
             Timestamp ts = new Timestamp(order.getDate().getTime());
             pst.setTimestamp(2, ts);
             pst.setInt(3, order.getTargetGroup().getId());  //改为TargetGroup
@@ -188,7 +188,7 @@ public class DBOperationUtil {
             comp = it.next();
             try {
                 pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-                pst.setInt(1, comp.getCno());
+                pst.setString(1, "null");
                 pst.setString(2, comp.getFilename());
                 pst.setBoolean(3, comp.isBackup());
                 pst.setString(4, comp.getMd5());
@@ -486,7 +486,7 @@ public class DBOperationUtil {
             try {
                 String sql = "insert into " + name + " values(?,?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                prstmt.setInt(1, host.getId());
+                prstmt.setString(1, "null");
                 prstmt.setString(2, host.getAddress());
                 prstmt.setString(3, ((LocalHost) host).getUser());
                 prstmt.executeUpdate();
@@ -503,7 +503,7 @@ public class DBOperationUtil {
             try {
                 String sql = "insert into " + name + " values(?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                prstmt.setInt(1, host.getId());
+                prstmt.setString(1, "null");
                 prstmt.setString(2, host.getAddress());
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -517,7 +517,7 @@ public class DBOperationUtil {
             try {
                 String sql = "insert into " + name + " values(?,?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                prstmt.setInt(1, host.getId());
+                prstmt.setString(1, "null");
                 prstmt.setString(2, host.getAddress());
                 prstmt.setInt(3, ((ProductHost) host).getLID());
                 prstmt.executeUpdate();
@@ -537,7 +537,7 @@ public class DBOperationUtil {
         try {
             String sql = "insert into " + name + " values(?,?,?)";
             prstmt = connectDB().prepareStatement(sql);
-            prstmt.setInt(1, group.getId());
+            prstmt.setString(1, "null");
             prstmt.setString(2, group.getName());
             prstmt.setInt(3, group.getTID());
             prstmt.executeUpdate();
