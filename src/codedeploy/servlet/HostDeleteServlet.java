@@ -12,35 +12,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Niko on 2017/11/28.
  */
 @WebServlet(name = "HostDeleteServlet")
 public class HostDeleteServlet extends HttpServlet {
+    DBOperationUtil dbo=new DBOperationUtil();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Host> hostList;
         if (request.getParameter("id")!=null) {
-            String s = request.getParameter("id");
-            int id = Integer.parseInt(s);
-            ArrayList<Host> del=new ArrayList<>();
-            LinkedList<Host> hostlist=(LinkedList)HostInsertServlet.hostList;
-            for(int i=0;i<hostlist.size();i++){
-                if(hostlist.get(i).getId()==id){
-                    del.add(hostlist.get(i));
-                }
-            }
-            for(int i=0;i<del.size();i++){
-                hostlist.remove(del.get(i));
-            }
-            for (Host h : HostInsertServlet.hostList) {
-                if (h.getId() == id) {
-                    HostInsertServlet.hostList.remove(h);
-                }
-            }
+            int id = Integer.parseInt(request.getParameter("id"));
+            int type=Integer.parseInt(request.getParameter("type"));
+            dbo.deleteHost(id,type);
         }
-        request.setAttribute("result",HostInsertServlet.hostList);
+        hostList=dbo.queryAllHost();
+        request.setAttribute("result",hostList);
         request.getRequestDispatcher("hostmanager.jsp").forward(request,response);
-    }
+    };
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request,response);

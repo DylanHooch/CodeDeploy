@@ -281,9 +281,14 @@ public class DBOperationUtil {
     }
 
     public List<Host> queryAllHost() {
-        List<Host> list = queryHost(-1, Constants.LOCALHOST);
-        list.addAll(queryHost(-1, Constants.PRODUCTHOST));
-        list.addAll(queryHost(-1, Constants.TESTHOST));
+        //List<Host> list = queryHost(-1, Constants.LOCALHOST);
+        List<Host>list=new ArrayList<>();
+        List<Host> pList=queryHost(-1, Constants.PRODUCTHOST);
+        List<Host> tList=queryHost(-1,Constants.TESTHOST);
+        if(pList!=null)
+            list.addAll(pList);
+        if(tList!=null)
+            list.addAll(queryHost(-1, Constants.TESTHOST));
         return list;
     }
 

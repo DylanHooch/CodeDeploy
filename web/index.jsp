@@ -20,14 +20,15 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
+<s:include value="nav.jsp"></s:include>
 <div style="width:800px;height:100px">
     <H1>智能部署上线系统</H1>
 </div>
 <div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;">
         <div style="width:300px;height:400px;float:left;" id="hostlist">
-            <s:include value="tree.jsp">
-                <s:param name="param" value="'lol'"/>
+            <s:include value="tree_good.jsp">
+                <s:param name="param" value="'unclickable'"/>
             </s:include>
         </div>
         <div style="width:500px;height:50px;float:left">
@@ -37,7 +38,6 @@
     <div style="width:500px;height:200px;float:left;" id="simpleorderlist">
         <s:include value="recentOrderChart.html"/>
     </div>
-
 </div>
 </body>
 </html>
