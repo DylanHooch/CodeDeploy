@@ -7,4 +7,6 @@ public class Constants {
     public final static int TESTHOST=4;
     public final static int PRODUCTHOST=5;
     public final static int PHOSTGROUP=6;
+    public final static String[] typename={"","","","LOCALHOST","TESTHOST","PRODUCTHOST","PHOSTGROUP"};
+
 }

@@ -39,7 +39,25 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>hostupdate</servlet-name>
-        <url-pattern>/hostupd</url-pattern>
+        <url-pattern>/HostUpdateServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>HostServlet</servlet-name>
+        <servlet-class>codedeploy.servlet.HostServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HostServlet</servlet-name>
+        <url-pattern>/HostServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>hostNode</servlet-name>
+        <servlet-class>codedeploy.servlet.HostNodeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hostNode</servlet-name>
+        <url-pattern>/HostNodeServlet</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>struts2</filter-name>

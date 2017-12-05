@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
-  User: Lenovo
-  Date: 2017/10/9
-  Time: 15:54
+  User: 世勋
+  Date: 2017-12-04
+  Time: 21:45
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -21,20 +21,18 @@
 </head>
 <body>
 <s:include value="nav.jsp"></s:include>
-<div style="width:800px;height:30px">
+<div style="width:800px;height:100px">
+    <H1>智能部署上线系统</H1>
 </div>
-<div style="width:1200px;height:1000px;">
+<div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;">
         <div style="width:300px;height:400px;float:left;" id="hostlist">
             <s:include value="tree_good.jsp">
-                <s:param name="param" value="'unclickable'"/>
+                <s:param name="param" value="'clickable'"/>
             </s:include>
         </div>
     </div>
-    <div style="width:900px;height:200px;float:left;" id="simpleorderlist">
-        <s:include value="recentOrderChart.jsp">
-            <s:param name="orderList" value="#request.recentOrders"/>
-        </s:include>
+    <div style="width:500px;height:200px;float:left;" id="simplehostlist">
     </div>
 </div>
 </body>

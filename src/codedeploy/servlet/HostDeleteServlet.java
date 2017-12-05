@@ -27,9 +27,7 @@ public class HostDeleteServlet extends HttpServlet {
             int type=Integer.parseInt(request.getParameter("type"));
             dbo.deleteHost(id,type);
         }
-        hostList=dbo.queryAllHost();
-        request.setAttribute("result",hostList);
-        request.getRequestDispatcher("hostmanager.jsp").forward(request,response);
+
     };
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

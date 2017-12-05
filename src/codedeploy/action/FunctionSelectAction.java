@@ -1,13 +1,15 @@
 package codedeploy.action;
 
-import codedeploy.bean.Constants;
-import codedeploy.bean.DeployOrder;
-import codedeploy.bean.LocalHost;
-import codedeploy.bean.PHostGroup;
+import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class FunctionSelectAction extends ActionSupport{
     LocalHost localhost;
@@ -40,10 +42,19 @@ public class FunctionSelectAction extends ActionSupport{
     }
 
     public String manageOrder() throws Exception{
+        DBOperationUtil dbo=new DBOperationUtil();
+        Map request=(Map) ActionContext.getContext().get("request");
+        Map session=(Map) ActionContext.getContext().getSession();
+        request.put("allorder",dbo.queryOrder(0));
+        session.put("hostList",dbo.queryHost(-1,Constants.TESTHOST));
+        session.put("groupList",dbo.queryGroup());
         return "manageorder";
     }
 
     public String manageHost() throws Exception{
+        DBOperationUtil dbo=new DBOperationUtil();
+        Map request=(Map) ActionContext.getContext().get("request");
+        request.put("","");
         return "managehost";
     }
 

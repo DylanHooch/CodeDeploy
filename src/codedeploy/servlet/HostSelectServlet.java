@@ -2,7 +2,6 @@ package codedeploy.servlet;
 
 import codedeploy.bean.Host;
 import codedeploy.util.DBOperationUtil;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +24,7 @@ public class HostSelectServlet extends HttpServlet {
             int type = Integer.parseInt(request.getParameter("type"));
             hostList=dbo.queryHost(id,type);
         }
+
         request.setAttribute("result",hostList);
         request.getRequestDispatcher("hostmanager.jsp").forward(request,response);
     }

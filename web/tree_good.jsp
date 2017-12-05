@@ -32,8 +32,8 @@
                     var nodeId=$(this).attr("nodeId");
                     var parentId=$(this).attr("parentId");
                     var hrefAddress=$(this).attr("hrefAddress");
-                    var nodeName=$(this).text();
                     var id=$(this).attr("hostID");
+                    var nodeName=$(this).text();
 
                     if( '<%=request.getParameter("param")%>'=="unclickable")
                     {
@@ -47,126 +47,82 @@
                     }
                     else if('<%=request.getParameter("param")%>'=="clickable")
                         if(nodeId==0)
-                            tree.add(nodeId,parentId,nodeName,"javascript:localHost('"+id+"')","","","","",false);
+                            tree.add(nodeId,parentId,nodeName,"javascript:localHost('"+id+"','"+nodeName+"')","","","","",false);
                         else if(nodeId<100)
-                            tree.add(nodeId,parentId,nodeName,"javascript:testHost(this.id)","","","","",false);
-                        else if(nodeId>200)
-                            tree.add(nodeId,parentId,nodeName,"javascript:groups(id)","","","","",false);
-                        else tree.add(nodeId,parentId,nodeName,"javascript:pHost(id)","","","","",false);
+                            tree.add(nodeId,parentId,nodeName,"javascript:testHost('"+id+"','"+nodeName+"')","","","","","",false);
+                        else if(nodeId<200)
+                            tree.add(nodeId,parentId,nodeName,"javascript:groups('"+id+"','"+nodeName+"')","","","","",false);
+                        else tree.add(nodeId,parentId,nodeName,"javascript:pHost('"+id+"','"+nodeName+"')","","","","",false);
                 });
             }
 
         });
     document.write(tree);
-    function localHost(id) {
+
+
+    function localHost(id,name) {
         $.ajax({
-            url: "LocalHostAction?id=" + id,
-            type: 'post', //数据发送方式
-            dataType: 'xml', //接受数据格式
+            url: "/HostServlet?id="+id+"&type=3&name="+name,  //type为主机类型 这里应该对应Constants.LOCALHOST
+            type: 'get',
+            error: function (json) {
+                alert("not lived!");
+            },
+            async: false,
+            success: function (html) {
+                $("#simplehostlist").html(html);
+
+            }
+        });
+    }
+
+
+
+    function groups(id,name) {
+        $.ajax({
+            url: "/HostServlet?id=" + id+"&type=6&name="+name,  //type为主机类型 这里应该对应Constants.PRODUCTHOST
+            type: 'get', //数据发送方
+            error: function (json) {
+                alert("not lived!");
+            },
+            async: false,
+            success: function (html) {
+                $("#simplehostlist").html(html);
+
+            }
+        });
+    }
+    function   pHost(id,name) {
+
+        $.ajax({
+            url: "/HostServlet?id="+id+"&type=5&name="+name,
+            type: 'get', //数据发送方
+            error: function (json) {
+                alert("not lived!");
+            },
+            async: false,
+            success: function (html) {
+                $("#simplehostlist").html(html);
+
+            }
+        });
+    }
+
+
+    function testHost(id,name) {
+
+        $.ajax({
+            url: "/HostServlet?id=" + id+"&type=4&name="+name,  //type为主机类型 这里应该对应Constants.TESTHOST
+            type: 'get', //数据发送方
 
             error: function (json) {
                 alert("not lived!");
             },
             async: false,
-            success: function (xml) {
-                var arr = new Array();
-                $(xml).find("node").each(function () {
-                    var nodeId = $(this).attr("nodeId");
-                    var parentId = $(this).attr("parentId");
-                    var hrefAddress = $(this).attr("hrefAddress");
-                    var nodeName = $(this).text();
-                    var id = $(this).attr("hostID");
-                    arr.push(id, nodeName)
-                });
-                var html = "";
-                for (var i = 0; i < arr.length; i++) { //遍历data数组
-                    var l1 = arr[i];
-                    i++;
-                    var l2 = arr[i];
+            success: function (html) {
+                $("#simplehostlist").html(html);
 
-                    html += "<tr>"
-                        + "<td><input type='radio'checked='checked' value='TRUE'/></td>"
-                        + "  <td>"
-                        + l1
-                        + "</td>"
-                        + " <td>"
-                        + l2
-                        + "</td>"
-                        + " <td>无备份</td>"
-                        + "  <td>已发布</td>"
-                        + "<td>未回滚</td>"
-                        + " <td>C12各基佬</td>"
-                        + " <td>2017/11/27</td>"
-                        + " <td>2017/11/27</td>"
-                        + "  <td><a href='1.jpg'>啪啪啪</a></td>"
-                        + "</tr>";
-                }
-                $("#hosts").html(html);
             }
         });
-    }
-
-//             $.ajax({
-////                    url:"localHostChart.jsp?array="+arr,
-//                    url:"\orderChart.jsp",
-//                    type:"get",
-//                    error:function(json){
-//                        alert( "not lived!");
-//                    },
-//                    async:false,
-//                    success:function (data) {
-//                        $("#simpleorderlist").html(data);
-//                    }
-//                })
-//            }
-//        });
-//    }
-//                $.ajax({
-//                    url:"localHostChart.do?array="+arr,
-//                    type:"post",
-//                    error:function(json){
-//                        alert( "not lived!");
-//                    },
-//                    async:false,
-////                    success:function (data) {
-////                        $("#simpleorderlist").html(data);
-////                    }
-//                })
-//				$.ajax({
-//					url:"\orderChart.jsp",
-//					type:"post",
-//					data:'{"id": "uname", "age": 18}'
-//					error:function(json){
-//						alert( "not lived!");
-//					},
-//					async:false,
-//					success:function (data) {
-//						$("#simpleorderlist").html(data);
-//					}
-//				})
-
-
-    function groups(id) {
-
-    }
-    function   pHost(id) {
-
-    }
-
-
-
-    function testHost(id) {
-
-        $.ajax({
-            url:"\orderChart.html?id="+id,
-            type:"get",
-            error:function(json){
-                alert( "not lived!");
-            },
-            async:false,
-            success:function (data) {
-            }
-        })
 
     }
 </script>

@@ -18,8 +18,11 @@
             <result name="manageorder">/orderManagement.jsp</result>
             <result name="managehost">/managehost.jsp</result>
         </action>
-        <action name="dynamicTreeAction" class="codedeploy.action.DynamicTreeActionTest" method="execute">
+        <action name="dynamicTreeAction" class="codedeploy.action.DynamicTreeAction" method="execute">
         </action>
-
+        <action name="order_*" class="codedeploy.action.OrderAction" method="{1}">
+            <result name="success">/orderManagement.jsp</result>
+            <result name="refresh">/createOrder.jsp</result>
+        </action>
     </package>
 </struts>
