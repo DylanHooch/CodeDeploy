@@ -33,6 +33,14 @@
         <url-pattern>/hostsel</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>hostupdate</servlet-name>
+        <servlet-class>codedeploy.servlet.HostUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hostupdate</servlet-name>
+        <url-pattern>/hostupd</url-pattern>
+    </servlet-mapping>
     <filter>
         <filter-name>struts2</filter-name>
         <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>

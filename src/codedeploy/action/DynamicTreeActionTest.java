@@ -56,13 +56,13 @@ public class DynamicTreeActionTest extends ActionSupport {
         hosts.add(new ProductHost(5,"222.301",2));
         hosts.add(new ProductHost(6,"222.302",2));
         grouplist.add(new PHostGroup(hosts,2,"222.300",2));
-        nodes.add(new Node(0,-1,"","222.222"));
+        nodes.add(new Node(123,0,-1,"","222.222"));
         for(int i=0;i<grouplist.size();i++)
         {
             hosts=grouplist.get(i).getHosts();
-            nodes.add(new Node(i+1,0,"","222.213"));
+            nodes.add(new Node(123,i+1,0,"","222.213"));
             for(int j=0;j<hosts.size();j++) {
-                nodes.add(new Node(hosts.get(j).getId(), grouplist.get(i).getId(), "", hosts.get(j).getAddress()));
+                nodes.add(new Node(123,hosts.get(j).getId(), grouplist.get(i).getId(), "", hosts.get(j).getAddress()));
             }
         }
         return nodes;

@@ -27,7 +27,7 @@ public class DynamicTreeAction extends ActionSupport{
             out.println("<nodes>");
             for(int i=0;i<list.size();i++){
                 Node node = list.get(i);
-                out.println("<node nodeId='"+node.getNodeId()+"' parentId='"+node.getParentId()+"' hrefAddress='"+node.getHrefAddress()+"'>"+node.getNodeName()+"</node>");
+                out.println("<node nodeId='"+node.getNodeId()+"' parentId='"+node.getParentId()+"' hrefAddress='"+node.getHrefAddress()+"'>"+node.getNodeName()+"' hostID='+"+"</node>");
             }
             out.println("</nodes>");
         }
@@ -41,14 +41,14 @@ public class DynamicTreeAction extends ActionSupport{
         DBOperationUtil dbo=new DBOperationUtil();
         List<PHostGroup> groups=dbo.queryGroup();
         //根节点：本地主机
-        nodes.add(new Node(0,-1,"", CodeDeploySystem.localAddress));
+        nodes.add(new Node(123,0,-1,"", CodeDeploySystem.localAddress));
         //第一层子节点：测试主机
         List<Host> testHosts=dbo.queryHost(-1, Constants.TESTHOST);
         TestHost testHost;
         for(int i=0;i<testHosts.size();i++)
         {
             testHost = (TestHost) testHosts.get(i);
-            nodes.add(new Node(i,0,"",testHost.getAddress()));
+            nodes.add(new Node(testHost.getId(),i,0,"",testHost.getAddress()));
             int tid=testHost.getId();
             int k=0;
             for(int j=0;j<groups.size();j++)
@@ -56,13 +56,13 @@ public class DynamicTreeAction extends ActionSupport{
                 if(groups.get(j).getTID()==tid)
                 {
                     //第二层子节点：生产主机组
-                    int nodeId_group=testHosts.size()+(k++);//加入偏移量testHosts.size()保证id不重复
-                    nodes.add(new Node(nodeId_group,i,"",groups.get(j).getName()));
+                    int nodeId_group=100+(k++);//加入偏移量testHosts.size()保证id不重复
+                    nodes.add(new Node(groups.get(j).getId(),nodeId_group,i,"",groups.get(j).getName()));
                     List<Host> pHosts=groups.get(j).getHosts();
                     for(int p=0;p<pHosts.size();p++)
                     {
                         //第三层子节点：生产主机
-                        nodes.add(new Node(groups.size()+testHosts.size()+p,nodeId_group,"",pHosts.get(p).getAddress()));
+                        nodes.add(new Node(pHosts.get(p).getId(),200+p,nodeId_group,"",pHosts.get(p).getAddress()));
                     }
                 }
             }

@@ -17,11 +17,13 @@
 </div>
 <div style="width:1000px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;" id="hostlist">
-        <s:include value="tree.jsp"/>
+        <s:include value="tree_good.jsp">
+            <s:param name="param" value="'unclickable'"/>
+        </s:include>
     </div>
 
-    <div style="width:700px;height:1000px;float:left;" id="simpleorderlist">
-        <s:include value="orderChart.html"/>
+    <div style="width:700px;height:1000px;float:left;" id="fullorderlist">
+        <s:include value="orderChart.jsp"/>
     </div>
 </div>
 </body>

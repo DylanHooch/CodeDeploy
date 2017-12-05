@@ -7,9 +7,9 @@ public class Node  {
     private String hrefAddress;
     private String nodeName;
 
-    public Node(int  nodeId,int  parentId,String hrefAddress,String nodeName)
+    public Node(int id,int  nodeId,int  parentId,String hrefAddress,String nodeName)
     {
-
+        this.id=id;
         this.nodeId = nodeId;
         this.parentId = parentId;
         this.hrefAddress = hrefAddress;

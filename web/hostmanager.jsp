@@ -18,7 +18,6 @@
 <body>
 
 <%
-
     List<Host>hostList = (List<Host>)request.getAttribute("result");
 %>
 
