@@ -14,20 +14,22 @@ import java.util.List;
 
 public class DynamicTreeAction extends ActionSupport{
     private static final long serialVersionUID = 1L;
-
+    DBOperationUtil dbo=new DBOperationUtil();
     public String execute() throws Exception {
         HttpServletRequest request= ServletActionContext.getRequest();
         HttpServletResponse response=ServletActionContext.getResponse();
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/xml;charset=utf-8");
         PrintWriter out = response.getWriter();
+//        List<Node> list = dbo.queryAllHostNode();
         ArrayList<Node> list= getNodeInfo();
+//        List<Node> list = dbo.queryAllHostNode();
         if(list!=null&&list.size()>0){
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             out.println("<nodes>");
             for(int i=0;i<list.size();i++){
                 Node node = list.get(i);
-                out.println("<node nodeId='"+node.getNodeId()+"' parentId='"+node.getParentId()+"' hrefAddress='"+node.getHrefAddress()+"'>"+node.getNodeName()+"' hostID='+"+"</node>");
+                out.println("<node nodeId='"+node.getNodeId()+"' hostID='"+node.getId()+"' parentId='"+node.getParentId()+"' hrefAddress='"+node.getHrefAddress()+"'>"+node.getNodeName()+"</node>");
             }
             out.println("</nodes>");
         }
@@ -39,32 +41,34 @@ public class DynamicTreeAction extends ActionSupport{
     public ArrayList<Node> getNodeInfo()
     {    ArrayList<Node> nodes =new ArrayList<>();
         DBOperationUtil dbo=new DBOperationUtil();
-        List<PHostGroup> groups=dbo.queryGroup();
+        List<PHostGroup> groups;
         //根节点：本地主机
         nodes.add(new Node(123,0,-1,"", CodeDeploySystem.localAddress));
         //第一层子节点：测试主机
         List<Host> testHosts=dbo.queryHost(-1, Constants.TESTHOST);
         TestHost testHost;
+        int q=0;
+        int k=0;
         for(int i=0;i<testHosts.size();i++)
         {
             testHost = (TestHost) testHosts.get(i);
-            nodes.add(new Node(testHost.getId(),i,0,"",testHost.getAddress()));
+            nodes.add(new Node(testHost.getId(),i+1,0,"",testHost.getAddress()));
             int tid=testHost.getId();
-            int k=0;
+
+            groups=dbo.queryGroupbyTID(tid);
             for(int j=0;j<groups.size();j++)
             {
-                if(groups.get(j).getTID()==tid)
-                {
+
                     //第二层子节点：生产主机组
                     int nodeId_group=100+(k++);//加入偏移量testHosts.size()保证id不重复
-                    nodes.add(new Node(groups.get(j).getId(),nodeId_group,i,"",groups.get(j).getName()));
+                    nodes.add(new Node(groups.get(j).getId(),nodeId_group,i+1,"",groups.get(j).getName()));
                     List<Host> pHosts=groups.get(j).getHosts();
                     for(int p=0;p<pHosts.size();p++)
                     {
                         //第三层子节点：生产主机
-                        nodes.add(new Node(pHosts.get(p).getId(),200+p,nodeId_group,"",pHosts.get(p).getAddress()));
+                        nodes.add(new Node(pHosts.get(p).getId(),200+(q++),nodeId_group,"",pHosts.get(p).getAddress()));
                     }
-                }
+
             }
         }
         return nodes;

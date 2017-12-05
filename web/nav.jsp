@@ -22,14 +22,14 @@
     </head>
     <style scoped> body{padding:50px;} </style>
         <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="www.baidu.com">智能代码部署系统</a>
+        <a class="navbar-brand" href="index.jsp">智能部署上线系统</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">主页 <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.jsp">主页 <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,14 +41,8 @@
                         <a class="dropdown-item" href="#">订单列表</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        主机管理
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">增加主机</a>
-                        <a class="dropdown-item" href="#">刷新主机</a>
-                    </div>
+                <li class="nav-item active">
+                    <a class="nav-link"  href="hostmanager_good.jsp">主机管理 <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
         </div>

@@ -18,29 +18,30 @@ import java.util.List;
 public class HostUpdateServlet extends HttpServlet {
     DBOperationUtil dbo=new DBOperationUtil();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("AAAA");
         if (request.getParameter("type")!=null) {
             boolean flg=false;
+
             int type = Integer.parseInt(request.getParameter("type"));
-            int gid=0;
-            if(type== Constants.PRODUCTHOST){
-                gid=Integer.parseInt(request.getParameter("gid"));
-            }
             String address = request.getParameter("address");
             int id = Integer.parseInt(request.getParameter("id"));
+            System.out.println(address);
             //insert
             Host inshost=new TestHost(id,address);
             switch (type){
                 case Constants.LOCALHOST:inshost=new LocalHost(id,address,"admin");break;
                 case Constants.TESTHOST:inshost=new TestHost(id,address);break;
-                case  Constants.PRODUCTHOST:inshost=new ProductHost(id,address,gid);break;
+                case  Constants.PRODUCTHOST:inshost=new ProductHost(id,address,-1);break;
                 default:flg=true;break;
+            }
+            if(type== Constants.PHOSTGROUP)
+            {
+                dbo.updategroup(id,address);
             }
             if(!flg)
                 dbo.updateHost(inshost);
         }
-        List<Host> hostList=dbo.queryAllHost();
-        request.setAttribute("result",hostList);
-        request.getRequestDispatcher("hostmanager.jsp").forward(request,response);
+
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request,response);
