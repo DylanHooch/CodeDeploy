@@ -7,6 +7,7 @@ import codedeploy.util.OrderUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,6 +104,7 @@ public class OrderAction extends ActionSupport{
 
         return SUCCESS;
     }
+    //TODO: 2017.12.06 檢查要不要在最后put tid
     public String refresh() throws Exception{
         dbo=new DBOperationUtil();
         Map request=(Map)ActionContext.getContext().get("request");
@@ -132,7 +134,8 @@ public class OrderAction extends ActionSupport{
             else i++;
         }
         request.put("groupListToShow",groupListToShow);
-        request.put("tid",tid);
+
+        //request.put("tid",tid);
         return "refresh";
     }
 }

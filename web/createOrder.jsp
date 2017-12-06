@@ -29,14 +29,13 @@ int tid=(int)request.getAttribute("tid");
                 <div class="col-lg-2 col-md-1 col-xs-1 col-sm-1">
                     <select id="datum_application" class="form-control">
                         <% for( Host host : hostList) {%>
-                        <option name="tid" value="<%= host.getId()%>" onclick="javascript:refresh(this.value)"><%= host.getAddress()%></option>
+                        <option name="tid" value="<%= host.getId()%>" onclick="refresh(this.value)"><%= host.getAddress()%></option>
                         <%}%>
                     </select>
-                    <script>
-                        $("[name='tid']").each(function(){
-                            alert($(this).value)
-                            if($(this).value==<%=tid%>)
-                                $(this).selected=true;
+                    <script type="text/javascript">
+                        $("option[name='tid']").each(function(){
+                            if($(this).val()==<%=tid%>)
+                                $(this).attr("selected","true");
                         });
                     </script>
                 </div>
@@ -146,7 +145,7 @@ int tid=(int)request.getAttribute("tid");
         </div>
     </div>
 </div>
-<script>
+<script type="text/javascript">
     function refresh(tid){
         $.ajax({
             url:"order_refresh.action",

@@ -27,12 +27,6 @@
     <s:include value="nav.jsp"></s:include>
     <div style="width:700px;height:1000px;float:left;" id="fullorderlist">
         <s:include value="orderChart.jsp">
-            <s:param name="allorder" value="#attr.allorder"/>
-            <s:param name="hostList" value="#attr.hostList"/>
-            <s:param name="groupList" value="#attr.groupList"/>
-            <s:param name="tid">
-                <%= ((List<PHostGroup>)session.getAttribute("groupList")).get(0).getTID()%>
-            </s:param>
         </s:include>
     </div>
 </div>
