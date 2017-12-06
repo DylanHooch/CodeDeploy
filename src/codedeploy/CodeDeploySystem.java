@@ -37,12 +37,21 @@ public class CodeDeploySystem {
             e.printStackTrace();
         }
     }
-    public static int createOrder(DeployOrder order)
+    public int CreateOrder(DeployOrder order)
     {
-        return Constants.SUCCESS;
-    }
-    public static int rollback()
-    {
+        FetchFileUtil ffu=new FetchFileUtil();
+        List<String> fpaths=order.getCodePathList();
+        Host thost=order.getTargetTHost();
+        for(int i=0;i<fpaths.size();i++){
+            String filepath=fpaths.get(i);
+            int ret=ffu.getFile("~//Document//temp",thost,"",filepath);
+
+            if(ret==Constants.FAILURE){
+                return Constants.FAILURE;
+            }
+        }
+        DBOperationUtil dbo=new DBOperationUtil();
+        dbo.insertOrder(order);
         return Constants.SUCCESS;
     }
     public static int releaseOrder(int id)

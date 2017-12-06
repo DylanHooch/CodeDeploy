@@ -12,6 +12,7 @@ import java.util.List;
 
 public class DBOperationUtil {
     private static Connection connection = null;
+    private int lid=1;
 
     private static Connection connectDB() {
         if (connection == null) {
