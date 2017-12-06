@@ -21,15 +21,15 @@ int tid=(int)request.getAttribute("tid");
 %>
 
 <main>
-    <form role="form" action="order_create.action">
+    <form role="form" action="order_create.action" id="OrdercreateForm">
         <fieldset class="form-group">
             <legend class="bg-info text-light">订单创建</legend>
             <div class="form-group row">
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label text-muted" for="Datum_application">基准应用：</label>
                 <div class="col-lg-2 col-md-1 col-xs-1 col-sm-1">
-                    <select id="datum_application" class="form-control">
+                    <select name="tid" id="datum_application" class="form-control">
                         <% for( Host host : hostList) {%>
-                        <option name="tid" value="<%= host.getId()%>" onclick="refresh(this.value)"><%= host.getAddress()%></option>
+                        <option  value="<%= host.getId()%>" onclick="refresh(this.value)"><%= host.getAddress()%></option>
                         <%}%>
                     </select>
                     <script type="text/javascript">
@@ -45,40 +45,40 @@ int tid=(int)request.getAttribute("tid");
                     <input name="oname" class="form-control" id="order_name" type="text" placeholder="example:部署订单"/>
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="backups_type">备份类型： *</label>
+            <%--<div class="form-group row">--%>
+                <%--<label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="backups_type">备份类型： *</label>--%>
 
-                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                    <select id="backups_type" class="form-control">
-                        <option>增量备份</option>
-                        <option>完全备份</option>
-                    </select>
-                </div>
-                <label class="col-lg-2 col-md-2 col-xs-2 col-sm-2 col-form-label " for="aim_backupsType">目标机备份状态： *</label>
+                <%--<div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">--%>
+                    <%--<select id="backups_type" class="form-control">--%>
+                        <%--<option>增量备份</option>--%>
+                        <%--<option>完全备份</option>--%>
+                    <%--</select>--%>
+                <%--</div>--%>
+                <%--<label class="col-lg-2 col-md-2 col-xs-2 col-sm-2 col-form-label " for="aim_backupsType">目标机备份状态： *</label>--%>
 
-                <div class="clearfix col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                    <select id="aim_backupsType" class="form-control">
-                        <option>目标机无备份</option>
-                        <option>目标机有备份</option>
+                <%--<div class="clearfix col-lg-2 col-md-2 col-xs-2 col-sm-2">--%>
+                    <%--<select id="aim_backupsType" class="form-control">--%>
+                        <%--<option>目标机无备份</option>--%>
+                        <%--<option>目标机有备份</option>--%>
 
-                    </select>
+                    <%--</select>--%>
 
-                </div>
-                <div class="col-lg-5 col-md-5 col-xs-5 col-sm-5">
-                    <small id="BackupHelp" class="form-text text-danger col-form-label">注意：动态库上线必须选择目标机有备份</small>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="order_type">订单类型： *</label>
-                <div class="clearfix col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                    <select id="order_type" class="form-control">
-                        <option>升级订单</option>
-                        <option>回滚订单</option>
+                <%--</div>--%>
+                <%--<div class="col-lg-5 col-md-5 col-xs-5 col-sm-5">--%>
+                    <%--<small id="BackupHelp" class="form-text text-danger col-form-label">注意：动态库上线必须选择目标机有备份</small>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="form-group row">--%>
+                <%--<label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="order_type">订单类型： *</label>--%>
+                <%--<div class="clearfix col-lg-2 col-md-2 col-xs-2 col-sm-2">--%>
+                    <%--<select id="order_type" class="form-control">--%>
+                        <%--<option>升级订单</option>--%>
+                        <%--<option>回滚订单</option>--%>
 
-                    </select>
+                    <%--</select>--%>
 
-                </div>
-            </div>
+                <%--</div>--%>
+            <%--</div>--%>
             <div class="form -group row ">
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="Datum_path">基准路径：</label>
                 <div class="col-11">
@@ -86,9 +86,9 @@ int tid=(int)request.getAttribute("tid");
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="File_list">文件清单： *</label>
+                <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="File_list" >文件清单： *</label>
                 <div class="col-5">
-                    <textarea name="filename" id="File_list" class="form-control" rows="6"></textarea>
+                    <textarea name="filenames" id="File_list" class="form-control" rows="6"></textarea>
                     <small id="FileHelp" class="form-text text-danger col-form-label">注意：文件清单贴相对于基准路径的相对路径，并且文件清单前不需要加“/”</small>
                 </div>
                 <div>
@@ -102,22 +102,24 @@ int tid=(int)request.getAttribute("tid");
                 <div class="col-5" name="target">
                     <% for( PHostGroup group : groupList) {%>
                     <label class="checkbox-inline">
-                        <input type="checkbox" name="gid" value="<%= group.getId()%>"><%= group.getName()%>
+                        <input type="radio" name="gid" value="<%= group.getId()%>"><%= group.getName()%>
                     </label>
                     <%}%>
                 </div>
             </div>
-            <div class="form-group row">
+            <%--<div class="form-group row">
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="File_list">备注信息： </label>
                 <div class="col-5">
                     <textarea class="form-control" rows="4"></textarea>
                 </div>
-            </div>
+            </div>--%>
             <div class="form-group row">
                 <div class="col-4">
                     <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#confirm_dialog">确定</button>
+
                 </div>
                 <div class="col-4">
+                    <button type="button" class="btn btn-warning btn-block" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </fieldset>
@@ -138,7 +140,7 @@ int tid=(int)request.getAttribute("tid");
                     <h5 class="modal-title" id="confirm">确认提交订单?</h5>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" >确定</button>
+                    <button id="_confirm" type="button" class="btn btn-default btn-sm" >确定</button>
                     <button type="button" class="btn btn-warning btn-sm" data-dismiss="modal" >取消</button>
                 </div>
             </div>
@@ -156,4 +158,7 @@ int tid=(int)request.getAttribute("tid");
             }
         })
     }
+    $("#_confirm").click(function(){
+            document.getElementById("OrdercreateForm").submit();
+    })
 </script>

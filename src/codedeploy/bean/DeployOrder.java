@@ -8,14 +8,16 @@ public class DeployOrder {
     private int ono;
     private String name;
     private Date date;
+    private int lid;
     private TestHost targetTHost;
     private PHostGroup targetGroup;
     private List<String> codePathList;
     private List<Integer> codeIDList;
     private boolean isReleased;
     public DeployOrder(){}
-    public DeployOrder(int ono, Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,boolean isReleased)
+    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,boolean isReleased)
     {
+        this.name=name;
         this.ono=ono;
         this.date=date;
         this.targetTHost=targetTHost;
@@ -34,6 +36,15 @@ public class DeployOrder {
         this.isReleased=isReleased;
         this.name=name;
     }
+
+    public int getLid() {
+        return lid;
+    }
+
+    public void setLid(int lid) {
+        this.lid = lid;
+    }
+
     public void setId(int ono)
     {
         this.ono=ono;

@@ -130,9 +130,6 @@
                     <s:action name="order_refresh" executeResult="true" >
                     </s:action>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                </div>
             </div>
         </div>
     </div>

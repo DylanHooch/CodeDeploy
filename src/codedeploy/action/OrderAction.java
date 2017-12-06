@@ -22,6 +22,10 @@ public class OrderAction extends ActionSupport{
     DBOperationUtil dbo;
     String basepath="/code";
     int tid;
+    String oname;
+    String filenames;
+    int gid;
+    int ono;
 
     public int getTid() {
         return tid;
@@ -38,7 +42,29 @@ public class OrderAction extends ActionSupport{
         this.order = order;
     }
 
+    public int getGid() {
+        return gid;
+    }
 
+    public String getFilenames() {
+        return filenames;
+    }
+
+    public String getOname() {
+        return oname;
+    }
+
+    public void setFilenames(String filenames) {
+        this.filenames = filenames;
+    }
+
+    public void setGid(int gid) {
+        this.gid = gid;
+    }
+
+    public void setOname(String oname) {
+        this.oname = oname;
+    }
 
     @Override
     public String execute() throws Exception {
@@ -55,10 +81,10 @@ public class OrderAction extends ActionSupport{
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
 
-        String oname=request.getParameter("oname");
-        String filenames=request.getParameter("filenames");
-        int tid = Integer.parseInt(request.getParameter("tid"));
-        int gid = Integer.parseInt(request.getParameter("gid"));
+//        String oname=request.getParameter("oname");
+//        String filenames=request.getParameter("filenames");
+//        int tid = Integer.parseInt(request.getParameter("tid"));
+//        int gid = Integer.parseInt(request.getParameter("gid"));
 
 
         String[] filelist=filenames.split("\n+");
@@ -71,8 +97,7 @@ public class OrderAction extends ActionSupport{
         List<Host> tHosts=dbo.queryHost(tid, Constants.TESTHOST);
         TestHost tHost=(TestHost)tHosts.get(0);
         PHostGroup pHosts=dbo.queryGroup(gid);
-        Integer ono=null;
-        order=new DeployOrder(ono,date,tHost,pHosts,pathlist,false);
+        order=new DeployOrder(789,oname,date,tHost,pHosts,pathlist,false);
         dbo.insertOrder(order);
 
         List<DeployOrder> orders=dbo.queryOrder(0);
@@ -85,7 +110,7 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-        int ono=Integer.parseInt(request.getParameter("ono"));
+//        int ono=Integer.parseInt(request.getParameter("ono"));
         dbo.deleteOrder(ono);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
@@ -98,8 +123,8 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-        String name=request.getParameter("name");
-        List<DeployOrder> orders=dbo.queryOrderByName(name);
+//        String name=request.getParameter("oname");
+        List<DeployOrder> orders=dbo.queryOrderByName(oname);
         request.setAttribute("allorder",orders);
 
         return SUCCESS;

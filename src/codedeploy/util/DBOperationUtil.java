@@ -150,24 +150,25 @@ public class DBOperationUtil {
         return dporders;
     }
 
-
+    //TODO 改插入的LID
     public int insertOrder(DeployOrder order) {/////LID
         String SQL;
         PreparedStatement pst;
         Connection dbconn = this.connectDB();
-        SQL = "insert into`codedeployment`.`Orders` (ONO,ODate,TargetGroup,TargetTHost,LID,IsReleased)  values(?,?, ?, ?,?,?);";
+        SQL = "insert into`codedeployment`.`Orders` (ODate,TargetGroup,TargetTHost,LID,IsReleased,OName)  values(?, ?, ?,?,?,?);";
 
         //先插订单
         try {
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            pst.setInt(1, order.getOno());
+//            pst.setString(1, "null");
             Timestamp ts = new Timestamp(order.getDate().getTime());
 
-            pst.setTimestamp(2, ts);
-            pst.setInt(3, order.getTargetGroup().getId());  //改为TargetGroup
-            pst.setInt(4, order.getTargetTHost().getId());  //改为TargetTHost
-            pst.setInt(5, 9); //改为LID
-            pst.setBoolean(6, order.isReleased());
+            pst.setTimestamp(1, ts);
+            pst.setInt(2, order.getTargetGroup().getId());  //改为TargetGroup
+            pst.setInt(3, order.getTargetTHost().getId());  //改为TargetTHost
+            pst.setInt(4, 1); //改为LID
+            pst.setBoolean(5, order.isReleased());
+            pst.setString(6,order.getName());
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {
