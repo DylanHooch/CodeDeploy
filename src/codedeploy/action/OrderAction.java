@@ -20,6 +20,15 @@ public class OrderAction extends ActionSupport{
     DeployOrder order;
     DBOperationUtil dbo;
     String basepath="/code";
+    int tid;
+
+    public int getTid() {
+        return tid;
+    }
+    public void setTid(int tid){
+        this.tid=tid;
+    }
+
     public DeployOrder getOrder() {
         return order;
     }
@@ -98,18 +107,31 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         Map request=(Map)ActionContext.getContext().get("request");
         Map session=(Map)ActionContext.getContext().getSession();
-        int tid=(int)request.get("tid");
+        int tid=(Integer)request.get("tid");
+
+        //直接从会话中获取groupList，若过期则重新查询
         List<PHostGroup> groupList=(List<PHostGroup>)session.get("groupList");
         if(groupList==null)
-            return SUCCESS;
-        int i;
-        for(i=0;i<groupList.size();)
         {
-            if(groupList.get(i).getTID()!=tid)
-                groupList.remove(i);
+            groupList=dbo.queryGroup();
+            session.put("groupList",groupList);
+        }
+        List<Host> hostList=(List<Host>)session.get("hostList");
+        if(hostList==null)
+        {
+            hostList=dbo.queryHost(-1,Constants.TESTHOST);
+            session.put("hostList",hostList);
+        }
+        int i;
+        List<PHostGroup> groupListToShow=new ArrayList<>();
+        groupListToShow.addAll(groupList);
+        for(i=0;i<groupListToShow.size();)
+        {
+            if(groupListToShow.get(i).getTID()!=tid)
+                groupListToShow.remove(i);
             else i++;
         }
-        request.put("groupListToShow",groupList);
+        request.put("groupListToShow",groupListToShow);
         request.put("tid",tid);
         return "refresh";
     }

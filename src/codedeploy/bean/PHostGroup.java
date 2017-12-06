@@ -16,7 +16,12 @@ public class PHostGroup {
         this.name=name;
         this.TID=TID;
     }
-
+    public PHostGroup(int id,String name,int TID)
+    {
+        this.id=id;
+        this.name=name;
+        this.TID=TID;
+    }
     public void setHosts(List<Host> hosts) {
         this.hosts = hosts;
     }

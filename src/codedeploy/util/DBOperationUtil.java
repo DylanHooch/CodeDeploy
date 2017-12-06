@@ -380,8 +380,6 @@ public class DBOperationUtil {
     //一次查询所有的生产主机组
     public List<PHostGroup> queryGroup() {
 
-        List<PHostGroup> grouplist = new ArrayList<>();
-
         DBOperationUtil dbo = new DBOperationUtil();
         Connection dbConn = dbo.connectDB();
 
@@ -394,37 +392,42 @@ public class DBOperationUtil {
             if (rs.next()) {
 
 
-                    List<Host> hosts = new ArrayList<>();
                     int gid = rs.getInt("GID");
                     String gname = rs.getString("GName");
                     int tid = rs.getInt("TID");
-                    List<Integer> gids=new ArrayList<>();
+                    List<PHostGroup> groups=new ArrayList<>();
+                    groups.add(new PHostGroup(gid,gname,tid));
                     while(rs.next())
                     {
-                        gids.add(rs.getInt("GID"));
+                        gid = rs.getInt("GID");
+                        gname = rs.getString("GName");
+                        tid = rs.getInt("TID");
+                        groups.add(new PHostGroup(gid,gname,tid));
                     }
-                    for(int i=0;i<gids.size();i++) {
-                        querysql = "select * from `codedeployment`.`producthost` where GID =" + gids.get(i);
+                    for(int i=0;i<groups.size();i++) {
+                        querysql = "select * from `codedeployment`.`producthost` where GID =" + groups.get(i).getId();
                         ResultSet rs1 = stat.executeQuery(querysql);
-
+                        List<Host> hosts = new ArrayList<>();
                         while (rs1.next())
-                        {   int id = rs1.getInt("PID");
-                                String address = rs1.getString("Address");
-                                hosts.add(new TestHost(id, address));
+                        {
+                            int id = rs1.getInt("PID");
+                            String address = rs1.getString("Address");
+                            hosts.add(new TestHost(id, address));
 
                         }
-                        grouplist.add(new PHostGroup(hosts, gid, gname, tid));
+                        groups.get(i).setHosts(hosts);
                     }
-
+                    stat.close();
+                    return groups;
             } else {
                 return null;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
-        return grouplist;
 
     }
 

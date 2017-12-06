@@ -14,8 +14,12 @@
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/bootstrap.js"></script>
 <body>
-<% List<Host> hostList=(List<Host>)request.getAttribute("hostList");%>
-<% List<PHostGroup> groupList=(List<PHostGroup>)request.getAttribute("groupListToShow");%>
+<%
+List<Host> hostList=(List<Host>)session.getAttribute("hostList");
+List<PHostGroup> groupList=(List<PHostGroup>)request.getAttribute("groupListToShow");
+int tid=(int)request.getAttribute("tid");
+%>
+
 <main>
     <form role="form" action="order_create.action">
         <fieldset class="form-group">
@@ -28,6 +32,13 @@
                         <option name="tid" value="<%= host.getId()%>" onclick="javascript:refresh(this.value)"><%= host.getAddress()%></option>
                         <%}%>
                     </select>
+                    <script>
+                        $("[name='tid']").each(function(){
+                            alert($(this).value)
+                            if($(this).value==<%=tid%>)
+                                $(this).selected=true;
+                        });
+                    </script>
                 </div>
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="order_name">订单名称： *</label>
 
@@ -89,7 +100,7 @@
             </div>
             <div class="form-group row">
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" >订单目标： *</label>
-                <div class="col-5">
+                <div class="col-5" name="target">
                     <% for( PHostGroup group : groupList) {%>
                     <label class="checkbox-inline">
                         <input type="checkbox" name="gid" value="<%= group.getId()%>"><%= group.getName()%>
@@ -138,10 +149,11 @@
 <script>
     function refresh(tid){
         $.ajax({
-            url:"order_refresh.action?tid="+tid,
-            type:"get",
+            url:"order_refresh.action",
+            type:"post",
+            data:{tid: tid},
             success:function (data) {
-                document.write(data);
+                $("#createordercontent").html(data);
             }
         })
     }

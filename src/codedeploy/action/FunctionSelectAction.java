@@ -47,7 +47,9 @@ public class FunctionSelectAction extends ActionSupport{
         Map session=(Map) ActionContext.getContext().getSession();
         request.put("allorder",dbo.queryOrder(0));
         session.put("hostList",dbo.queryHost(-1,Constants.TESTHOST));
-        session.put("groupList",dbo.queryGroup());
+        List<PHostGroup> groupList=dbo.queryGroup();
+        session.put("groupList",groupList);
+        request.put("tid",groupList.get(0).getTID());
         return "manageorder";
     }
 

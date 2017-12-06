@@ -126,7 +126,7 @@
                     <!--一个叉 -->
                     &times;
                 </button>
-                <div class="modal-body">
+                <div class="modal-body" id="createordercontent">
                     <s:action name="order_refresh" executeResult="true" >
                     </s:action>
                 </div>
