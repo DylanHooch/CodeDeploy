@@ -36,10 +36,11 @@
 
         <%--<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#createOrder">增加</button>--%>
         <%   int type=Integer.parseInt(request.getParameter("type"));
-            if(type==6)
+            if(type!=6)
         {%>
-        <a  href="javascript:insert ('<%=request.getParameter("id")%>')"  class="btn btn-outline-secondary" >增加</a>
-        <% }%>
+        <a  href="javascript:insert ('<%=request.getParameter("id")%>','<%=request.getParameter("type")%>')"  class="btn btn-outline-secondary" >增加</a>
+        <% } else%>
+        <a  href="javascript:insertPhost ('<%=request.getParameter("id")%>')"  class="btn btn-outline-secondary" >增加</a>
     </div>
 
     <table class="table table-hover table-bordered">
@@ -87,7 +88,8 @@
 
 
 <script type="text/javascript">
-function update(id,name,type) {
+function update(id,name,type)
+{
 
     result = prompt("请输入新名称", name)
     if (result == null)//you click cancel
@@ -145,7 +147,7 @@ function Delete(id,name,type) {
 
     }
 }
-    function insert(GID) {
+    function insert(ID,type) {
 
         result = prompt("请输入新的生产主机地址")
         if (result == null)//you click ok, but input nothing
@@ -155,7 +157,7 @@ function Delete(id,name,type) {
         else//input something and clikc ok
         {
             $.ajax({
-                url: "/hostins?GID=" + GID+ "&Address="+ result,
+                url: "/hostins?ID=" + ID+ "&Address="+ result+"&type="+type,
                 type: 'get', //数据发送方
                 error: function (json) {
                     alert("not lived!");
@@ -172,6 +174,33 @@ function Delete(id,name,type) {
 
         }
     }
+function insertPhost(GID) {
+
+    result = prompt("请输入新的生产主机地址")
+    if (result == null)//you click ok, but input nothing
+    {
+
+    }
+    else//input something and clikc ok
+    {
+        $.ajax({
+            url: "/hostinsPh?ID=" + GID+ "&Address="+ result,
+            type: 'get', //数据发送方
+            error: function (json) {
+                alert("not lived!");
+            },
+            async: false,
+            success: function (html) {
+
+                reslut = confirm("数据增加成功");
+                location.reload();
+
+
+            }
+        });
+
+    }
+}
 </script>
 
 
