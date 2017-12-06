@@ -1,5 +1,6 @@
 package codedeploy.servlet;
 
+import codedeploy.bean.Constants;
 import codedeploy.bean.Host;
 import codedeploy.bean.TestHost;
 import codedeploy.util.DBOperationUtil;
@@ -21,11 +22,14 @@ import java.util.List;
 public class HostDeleteServlet extends HttpServlet {
     DBOperationUtil dbo=new DBOperationUtil();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Host> hostList;
+
         if (request.getParameter("id")!=null) {
             int id = Integer.parseInt(request.getParameter("id"));
             int type=Integer.parseInt(request.getParameter("type"));
+            if(type!= Constants.PHOSTGROUP)
             dbo.deleteHost(id,type);
+            else
+                dbo.deleteGroup(id);
         }
 
     };

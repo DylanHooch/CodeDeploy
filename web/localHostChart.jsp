@@ -39,8 +39,11 @@
             if(type!=6)
         {%>
         <a  href="javascript:insert ('<%=request.getParameter("id")%>','<%=request.getParameter("type")%>')"  class="btn btn-outline-secondary" >增加</a>
-        <% } else%>
+        <% } else if(type!=5){%>
         <a  href="javascript:insertPhost ('<%=request.getParameter("id")%>')"  class="btn btn-outline-secondary" >增加</a>
+        <a  href="javascript:Delete ('<%=request.getParameter("id")%>','<%=request.getParameter("type")%>')"  class="btn btn-outline-secondary" >删除</a>
+        <%} %>
+
     </div>
 
     <table class="table table-hover table-bordered">
@@ -66,7 +69,7 @@
         <td><%=list.get(i).getId()%></td>
         <td><%=Constants.typename[list.get(i).getType()]%></td>
         <td><a href="javascript:update('<%=list.get(i).getId()%>','<%=list.get(i).getAddress()%>','<%=list.get(i).getType()%>')">编辑</a></td>
-        <td><a href="javascript:Delete('<%=list.get(i).getId()%>','<%=list.get(i).getAddress()%>','<%=list.get(i).getType()%>')">删除</a></td>
+        <td><a href="javascript:Delete('<%=list.get(i).getId()%>','<%=list.get(i).getType()%>')">删除</a></td>
         </tr>
              <%
             }
@@ -121,7 +124,7 @@ function update(id,name,type)
     }
 }
 
-function Delete(id,name,type) {
+function Delete(id,type) {
 
     result = confirm("请确认是否删除")
     if (result == false)//you click ok, but input nothing
@@ -131,7 +134,7 @@ function Delete(id,name,type) {
     else//input something and clikc ok
     {
         $.ajax({
-            url: "/hostdel?id=" + id + "&name=" + name + "&type=" + type,
+            url: "/hostdel?id=" + id + "&type=" + type,
             type: 'get', //数据发送方
             error: function (json) {
                 alert("not lived!");
@@ -139,7 +142,7 @@ function Delete(id,name,type) {
             async: false,
             success: function (html) {
 
-                reslut = confirm("数据删除成功");
+                confirm("数据删除成功");
                 location.reload();
 
             }
@@ -148,16 +151,20 @@ function Delete(id,name,type) {
     }
 }
     function insert(ID,type) {
-
-        result = prompt("请输入新的生产主机地址")
+        <% if(Integer.parseInt(request.getParameter("type"))==Constants.LOCALHOST)
+        {%>
+        result = prompt("请输入新的测试主机地址")
+        <%} else {%>
+        result = prompt("请输入新的生产组名称")
+        <% }%>
         if (result == null)//you click ok, but input nothing
         {
-
+            alert("输入不能为空")
         }
         else//input something and clikc ok
         {
             $.ajax({
-                url: "/hostins?ID=" + ID+ "&Address="+ result+"&type="+type,
+                url: "/hostins?id=" + ID+ "&Address="+ result+"&type="+type,
                 type: 'get', //数据发送方
                 error: function (json) {
                     alert("not lived!");
@@ -184,7 +191,7 @@ function insertPhost(GID) {
     else//input something and clikc ok
     {
         $.ajax({
-            url: "/hostinsPh?ID=" + GID+ "&Address="+ result,
+            url: "/hostinsphost?GID=" + GID+ "&Address="+ result,
             type: 'get', //数据发送方
             error: function (json) {
                 alert("not lived!");

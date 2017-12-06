@@ -4,7 +4,14 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
     <display-name>hello world!</display-name>
-
+    <servlet>
+        <servlet-name>Phostinsert</servlet-name>
+        <servlet-class>codedeploy.servlet.HostInsertPhostServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Phostinsert</servlet-name>
+        <url-pattern>/hostinsphost</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>hostinsert</servlet-name>
