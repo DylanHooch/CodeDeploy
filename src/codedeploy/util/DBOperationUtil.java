@@ -509,6 +509,27 @@ public class DBOperationUtil {
         return Constants.FAILURE;
 
     }
+    public int deleteHosbyGID(int GID) {
+
+            PreparedStatement prstmt = null;
+            try {
+                String sql = "DELETE FROM `codedeployment`.`producthost` WHERE GID = ?";
+                prstmt = connectDB().prepareStatement(sql);
+                prstmt.setInt(1, GID);
+                prstmt.executeUpdate();
+                prstmt.close();
+                return Constants.SUCCESS;
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            } catch (Exception e) {
+                //Handle errors for Class.forName
+                e.printStackTrace();
+            }
+
+        return Constants.FAILURE;
+
+    }
 
     public int deleteHost(Host host)
 
@@ -575,12 +596,12 @@ public class DBOperationUtil {
         int type = host.getType();
         if (type == Constants.LOCALHOST) {
             //插本地
-            String name = "`CodeDeploy`.`LocalHost`";
+            String name = "`codedeployment`.`LocalHost`";
             PreparedStatement prstmt = null;
             try {
                 String sql = "insert into " + name + " values(?,?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                prstmt.setString(1, "null");
+                prstmt.setString(1, null);
                 prstmt.setString(2, host.getAddress());
                 prstmt.setString(3, ((LocalHost) host).getUser());
                 prstmt.executeUpdate();
@@ -592,13 +613,16 @@ public class DBOperationUtil {
             return Constants.SUCCESS;
         } else if (type == Constants.TESTHOST) {
             //插测试
-            String name = "`CodeDeploy`.`TestHost`";
+            String name = "`codedeployment`.`TestHost`";
             PreparedStatement prstmt = null;
             try {
                 String sql = "insert into " + name + " values(?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                prstmt.setString(1, "null");
+                prstmt.setString(1, null);
                 prstmt.setString(2, host.getAddress());
+                prstmt.executeUpdate();
+                prstmt.close();
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 return Constants.FAILURE;
@@ -611,7 +635,6 @@ public class DBOperationUtil {
             try {
                 String sql = "insert into " + name + " values(?,?,?)";
                 prstmt = connectDB().prepareStatement(sql);
-                System.out.println(querymaxPid());
                 prstmt.setInt(1, querymaxPid());
                 prstmt.setString(2, host.getAddress());
                 prstmt.setInt(3, ((ProductHost) host).getLID());
@@ -641,14 +664,15 @@ public class DBOperationUtil {
         return Constants.SUCCESS;
         //return Constants.FAILURE;
     }
+
     public int insertGroup(PHostGroup group) {
         //插group
-        String name = "`CodeDeploy`.`PHostGroup`";
+        String name = "`codedeployment`.`PHostGroup`";
         PreparedStatement prstmt = null;
         try {
             String sql = "insert into " + name + " values(?,?,?)";
             prstmt = connectDB().prepareStatement(sql);
-            prstmt.setString(1, "null");
+            prstmt.setString(1, null);
             prstmt.setString(2, group.getName());
             prstmt.setInt(3, group.getTID());
             prstmt.executeUpdate();
@@ -661,11 +685,27 @@ public class DBOperationUtil {
         //return Constants.FAILURE;
     }
 
+    public int deleteGroup(int GID) {
+
+        PreparedStatement prstmt = null;
+        String sql="DELETE FROM `codedeployment`.`phostgroup`  WHERE GID = ?";
+        try {
+            prstmt = connectDB().prepareStatement(sql);
+            prstmt.setInt(1, GID);
+            prstmt.execute();
+            prstmt.close();
+            deleteHosbyGID(GID);
+            return Constants.SUCCESS;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
 
 
     public int deleteOrder(int ono){
         PreparedStatement prstmt = null;
-        String sql="DELETE FROM `codedeploy`.`ORDERS` "+" WHERE ONO = ?";
+        String sql="DELETE FROM `codedeployment`.`ORDERS` "+" WHERE ONO = ?";
         try {
             prstmt = connectDB().prepareStatement(sql);
             prstmt.setInt(1, ono);

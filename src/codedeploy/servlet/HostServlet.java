@@ -43,10 +43,16 @@ public class HostServlet extends HttpServlet {
        else if(Type==4)
         {
             List<PHostGroup> grouplist =dbo.queryGroupbyTID(ID);
-            hostlist=grouplist.get(0).getHosts();
+            if(grouplist.isEmpty())
+             hostlist=new ArrayList<>();
+
+           else
+            {
+                hostlist=grouplist.get(0).getHosts();
             for(int i=1;i<grouplist.size();i++)
             {
                 hostlist.addAll(grouplist.get(i).getHosts());
+            }
             }
         }else if(Type==5)
         {
