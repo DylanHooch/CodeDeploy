@@ -1,7 +1,3 @@
-<%@ page import="codedeploy.bean.DeployOrder" %>
-<%@ page import="java.util.List" %>
-<%@ page import="codedeploy.bean.PHostGroup" %>
-<%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: wsz
@@ -11,11 +7,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
-
-<%
- List<DeployOrder> orders = (List<DeployOrder>)request.getAttribute("allorder");
-%>
-
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -25,7 +16,7 @@
 
 <main>
     <div>
-        <legend class="bg-info text-light">订单创建</legend>
+        <font size="6" color="blue">订单管理</font>
         <p></p>
     </div>
 
@@ -56,41 +47,49 @@
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
     </div>
     <p></p>
-`
+
     <table class="table table-hover table-bordered table-responsive" >
         <thead >
         <tr>
             <th>选择</th>
             <th>订单名称</th>
+            <th>订单描述</th>
             <th>目标机备份</th>
             <th>发布状态</th>
+            <th >回滚状态</th>
+            <th>创建者</th>
             <th>订单创建日期</th>
+            <th>最新执行时间</th>
+            <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        <% if(orders!=null){
-                for(DeployOrder order : orders ) {%>        <tr>
+        <tr>
             <td><input type="radio" name="selecttr" checked="checked" /></td>
-            <td><%= order.getName()%></td>
-            <td>
-                <%if(order.isReleased()==true) {%>
-                    已备份
-                <%}else {%>
-                    未备份
-                <%}%>
-            </td>
-            <td>
+            <td>订购景栓上门</td>
+            <td>VIP订单</td>
+            <td>无备份</td>
+            <td >已发布</td>
+            <td name="rb_state">未回滚</td>
+            <td>C12各基佬</td>
+            <td>2017/11/27</td>
+            <td>2017/11/27</td>
+            <td><a href="1.jpg">啪啪啪</a></td>
 
-                <%if(order.isReleased()==true) {%>
-                已发布
-                <%}else {%>
-                未发布
-                <%}%>
-            </td>
-
-            <td ><%= order.getDate()%></td>
         </tr>
-        <%}}%>
+        <tr>
+            <td><input type="radio" name="selecttr"/></td>
+            <td>订购景栓上门</td>
+            <td>VIP订单</td>
+            <td>无备份</td>
+            <td>已发布</td>
+            <td name="rb_state">未回滚</td>
+            <td>C12各基佬</td>
+            <td>2017/11/27</td>
+            <td>2017/11/27</td>
+            <td><a href="1.jpg">啪啪啪</a></td>
+
+        </tr>
         </tbody>
     </table>
 
@@ -117,18 +116,21 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createOrderLabel" aria-hidden="true">
-    <div class="modal-dialog-centered">
+<div class="modal fade" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createOrderLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="createOrderLabel">创建新订单</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <!--一个叉 -->
                     &times;
                 </button>
-                <div class="modal-body" id="createordercontent">
-                    <s:action name="order_refresh" executeResult="true" >
-                    </s:action>
+                <h4 class="modal-title" id="createOrderLabel">创建新订单</h4>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
         </div>

@@ -5,6 +5,14 @@
          version="3.1">
     <display-name>hello world!</display-name>
     <servlet>
+        <servlet-name>releaseorder</servlet-name>
+        <servlet-class>codedeploy.servlet.ReleaseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>releaseorder</servlet-name>
+        <url-pattern>/orderrelease</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>RecentOrder</servlet-name>
         <servlet-class>codedeploy.servlet.RecentOrderServlet</servlet-class>
     </servlet>
