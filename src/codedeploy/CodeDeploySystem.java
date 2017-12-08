@@ -69,11 +69,12 @@ public class CodeDeploySystem {
         int i;
         for(i=0;i<orderlist.size();i++)
         {
-            if(orderlist.get(i).isReleased()) {
+            if(orderlist.get(i).isReleased()==false&&orderlist.get(i).getOno()==id) {
                 dbo.updateOrderisReleased(orderlist.get(i));//发布状态
                 break;
             }
         }
+
         //id 发布没 /没 修改 修改发布状态、备份状态
         return Constants.SUCCESS;
     }
