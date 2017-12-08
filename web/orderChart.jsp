@@ -71,9 +71,9 @@
         <% if(orders!=null){
             int row=1;
             for(DeployOrder order : orders ) {%>
-        <tr name="777">
+        <tr >
             <td><input type="radio" name="selecttr" value="<%=row++ %>" check="checked"/></td>
-            <td name="idd" style="display: none"><%=order.getOno()%></td>
+            <td  style="display: none"><%=order.getOno()%></td>
             <td><%= order.getName()%></td>
             <td >
                 <%if(true) {%>
