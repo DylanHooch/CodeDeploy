@@ -18,7 +18,7 @@ public class HostInsertPhostServlet extends javax.servlet.http.HttpServlet {
 
         int GID =Integer.parseInt(request.getParameter("GID"));
         String Name=request.getParameter("Address");
-        int ID=dbo.querymaxPid();
+        int ID=0;
         Host inshost=new ProductHost(ID,Name,GID);
         dbo.insertHost(inshost);
 

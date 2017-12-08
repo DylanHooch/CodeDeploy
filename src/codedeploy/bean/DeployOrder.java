@@ -36,6 +36,18 @@ public class DeployOrder {
         this.isReleased=isReleased;
         this.name=name;
     }
+    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,List<Integer> codeIDList,boolean isReleased,int lid)
+    {
+        this.ono=ono;
+        this.codeIDList=codeIDList;
+        this.date=date;
+        this.targetTHost=targetTHost;
+        this.targetGroup=pHostGroup;
+        this.codePathList=codePathList;
+        this.isReleased=isReleased;
+        this.name=name;
+        this.lid=lid;
+    }
 
     public int getLid() {
         return lid;

@@ -1,6 +1,7 @@
 package codedeploy.util;
 
 
+import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
@@ -46,9 +47,10 @@ public class DBOperationUtil {
         if (dayNum == 0)
         //返回包含全部订单的list
         {
-            SQL = "select * from `codedeployment`.`Orders`";
+            SQL = "select * from `codedeployment`.`orders` where `orders`.`LID`=?";
             try {
                 pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+                pst.setInt(1,CodeDeploySystem.getLid());
                 rs = pst.executeQuery();
                 int ColumnCount = rs.getMetaData().getColumnCount();
                 Columnname = new String[ColumnCount];
@@ -64,18 +66,18 @@ public class DBOperationUtil {
                     List<String> codePathList = new ArrayList<>(codeList.size());
                     List<Integer> codeIDList = new ArrayList<>(codeList.size());
                     for (int i = 0; i < codePathList.size(); i++) {
-                        codePathList.add(codeList.get(i).getFilePath());
+                        codePathList.add(codeList.get(i).getFilename());
                         codeIDList.add(codeList.get(i).getCno());
                     }
                     int isReleasedInt = rs.getInt("isReleased");
                     boolean isReleased=false;
                     if(isReleasedInt==1)
                         isReleased=true;
-                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased));
+                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid()));
+
                 }
                 dbconn.close();
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return null;
             }
@@ -84,10 +86,11 @@ public class DBOperationUtil {
         } else
         //返回dayNum天内订单的list
         {
-            SQL = "SELECT * FROM `codedeployment`.`Orders` ORDER BY `日期` DESC  LIMIT 0,?;";
+            SQL = "SELECT * FROM `codedeployment`.`Orders` where `LID`=? and DATE_SUB(CURDATE(), INTERVAL ? DAY) <= date(`odate`) ORDER BY `odate` DESC;";
             try {
                 pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-                pst.setInt(1, dayNum);
+                pst.setInt(1,CodeDeploySystem.getLid());
+                pst.setInt(2, dayNum);
                 rs = pst.executeQuery();
                 while (rs.next()) {
                     int ono = rs.getInt("ONO");
@@ -99,11 +102,11 @@ public class DBOperationUtil {
                     List<String> codePathList = new ArrayList<>(codeList.size());
                     List<Integer> codeIDList = new ArrayList<>(codeList.size());
                     for (int i = 0; i < codePathList.size(); i++) {
-                        codePathList.add(codeList.get(i).getFilePath());
+                        codePathList.add(codeList.get(i).getFilename());
                         codeIDList.add(codeList.get(i).getCno());
                     }
                     boolean isReleased = rs.getBoolean("isReleased");
-                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased));
+                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid()));
                 }
 
             } catch (SQLException e) {
@@ -122,25 +125,27 @@ public class DBOperationUtil {
         ResultSet rs = null;
         PreparedStatement pst;
         List<DeployOrder> dporders = new ArrayList();
-        SQL = "SELECT * FROM `codedeployment`.`Orders` WHERE OName = ? ORDER BY `日期` DESC;";
+        SQL = "SELECT * FROM `codedeployment`.`Orders` where `LID`=? and `oname`=? ORDER BY `odate` DESC;";
         try {
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, name);
+            pst.setInt(1,CodeDeploySystem.getLid());
+            pst.setString(2, name);
             rs = pst.executeQuery();
             while (rs.next()) {
                 int ono = rs.getInt("ONO");
                 java.util.Date date = rs.getTimestamp("ODate");
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
-                PHostGroup targetGroup = (PHostGroup) queryGroup(rs.getInt("targetGroup"));
+                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
+                int lid=rs.getInt("LID");
                 List<Code> codeList = queryCode(-1, null, false, null, ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
                 for (int i = 0; i < codePathList.size(); i++) {
-                    codePathList.add(codeList.get(i).getFilePath());
+                    codePathList.add(codeList.get(i).getFilename());
                     codeIDList.add(codeList.get(i).getCno());
                 }
                 boolean isReleased = rs.getBoolean("isReleased");
-                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased));
+                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid));
             }
 
         } catch (SQLException e) {
@@ -151,15 +156,16 @@ public class DBOperationUtil {
         return dporders;
     }
 
-    //TODO 改插入的LID
+
     public int insertOrder(DeployOrder order) {/////LID
         String SQL;
         PreparedStatement pst;
         Connection dbconn = this.connectDB();
         SQL = "insert into`codedeployment`.`Orders` (ODate,TargetGroup,TargetTHost,LID,IsReleased,OName)  values(?, ?, ?,?,?,?);";
 
-        //先插订单
+
         try {
+            //先插订单
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
 //            pst.setString(1, "null");
             Timestamp ts = new Timestamp(order.getDate().getTime());
@@ -167,7 +173,7 @@ public class DBOperationUtil {
             pst.setTimestamp(1, ts);
             pst.setInt(2, order.getTargetGroup().getId());  //改为TargetGroup
             pst.setInt(3, order.getTargetTHost().getId());  //改为TargetTHost
-            pst.setInt(4, 1); //改为LID
+            pst.setInt(4, CodeDeploySystem.getLid());
             pst.setBoolean(5, order.isReleased());
             pst.setString(6,order.getName());
             pst.executeUpdate();
@@ -180,7 +186,7 @@ public class DBOperationUtil {
 
         return Constants.SUCCESS;
         //return Constants.FAILURE;
-    }//LID
+    }
 
 
 
@@ -197,12 +203,15 @@ public class DBOperationUtil {
     public int querymaxPid ()
     {   DBOperationUtil dbo = new DBOperationUtil();
         Connection dbConn = dbo.connectDB();
-        String sql = "select max(PID) from `codedeployment`.`ProductHost` ";
+        String sql = "select max(PID) from `codedeployment`.`ProductHost`,codedeployment.lp where" +
+                " codedeployment.lp.pid=codedeployment.producthost.PID and " +
+                "codedeployment.lp.LID=?";
         ResultSet rs=null;
 
         try {
-            Statement stat = dbConn.createStatement();
-            rs = stat.executeQuery(sql);
+            PreparedStatement stat = dbConn.prepareStatement(sql);
+            stat.setInt(1,CodeDeploySystem.getLid());
+            rs = stat.executeQuery();
             while(rs.next())
             {
                 return rs.getInt(1)+1;
@@ -214,13 +223,19 @@ public class DBOperationUtil {
         return 1;
     }
     public List<Host> queryHostbyGID(int GID)
-    {   DBOperationUtil dbo = new DBOperationUtil();
+    {
+        DBOperationUtil dbo = new DBOperationUtil();
         Connection dbConn = dbo.connectDB();
-        String sql = "select * from `codedeployment`.`ProductHost` where GID = " + GID;
+        String sql = "select * from `codedeployment`.`ProductHost`, `codedeployment`.`LP` " +
+                "where `codedeployment`.`ProductHost`.`PID`=`codedeployment`.`lp`.`PID`" +
+                " and `codedeployment`.`lp`.`lid`=?" +
+                "and GID=? " ;
         ResultSet rs=null;
         List<Host> hostlist=new ArrayList<>();
         try {
-            Statement stat = dbConn.createStatement();
+            PreparedStatement stat = dbConn.prepareStatement(sql);
+            stat.setInt(1,CodeDeploySystem.getLid());
+            stat.setInt(2,GID);
             rs = stat.executeQuery(sql);
             while(rs.next())
             {
@@ -232,7 +247,7 @@ public class DBOperationUtil {
         return hostlist;
 
     }
-    //可以查询单个生产、测试、本地主机以及生产主机组，分别输入PID、TID、LID和GID，type为Constant类中的类型常数
+    //可以查询单个生产、测试、本地主机，分别输入PID、TID、LID，type为Constant类中的类型常数
     public List<Host> queryHost(int id, int type) {
         List<Host> hosts = new ArrayList<>();
         DBOperationUtil dbo = new DBOperationUtil();
@@ -241,22 +256,20 @@ public class DBOperationUtil {
         if (rs == null)
             return null;
 
-        if (type != Constants.PRODUCTHOST) {
+        if (type != Constants.PHOSTGROUP) {
             try {
                 while (rs.next()){
-                    id=rs.getInt("TID");
                     switch (type) {
                         case Constants.LOCALHOST: {
-                            hosts.add(new LocalHost(id, rs.getString("Address"), rs.getString("User")));
+                            hosts.add(new LocalHost(rs.getInt("LID"), rs.getString("Address"), rs.getString("User")));
                             break;
                         }
                         case Constants.TESTHOST: {
-                            hosts.add(new TestHost(id, rs.getString("HAddress")));
+                            hosts.add(new TestHost(rs.getInt("TID"), rs.getString("Address")));
                             break;
                         }
-                        case Constants.PHOSTGROUP: {
-                            hosts.add(new ProductHost(rs.getInt("GID"), rs.getString("GName"), rs.getInt("TID")));
-                            break;
+                        case Constants.PRODUCTHOST:{
+                            hosts.add(new ProductHost(rs.getInt("PID"),rs.getString("Address"),rs.getInt("GID")));
                         }
                     }
                 }
@@ -278,10 +291,23 @@ public class DBOperationUtil {
     }
 
     private ResultSet queryHost_help(int id, int type, Connection conn) {
-        String tablename[] = {"", "", "", "`codedeployment`.`LocalHost`", "`codedeployment`.`TestHost`", "`codedeployment`.`ProductHost`", "`codedeployment`.`PHOSTGROUP`"};//此处与Constants中的常量绑定，修改Constants则此处也需要修改
+        String tablename[] = {"", "", "", "`codedeployment`.`LocalHost`", "`codedeployment`.`TestHost`", "`codedeployment`.`ProductHost`", "`codedeployment`.`ProductHost`"};//此处与Constants中的常量绑定，修改Constants则此处也需要修改
         String idname[] = {"", "", "", "LID", "TID", "PID", "GID"};
+        String table;
+        if(type==Constants.TESTHOST)
+            table=tablename[type]+",`codedeployment`.`lt`";
+        else if(type==Constants.PRODUCTHOST)
+            table=tablename[type]+",`codedeployment`.`lp`";
+        else table=tablename[type];
+        String whereclause;
+        if(type==Constants.TESTHOST)
+            whereclause=tablename[type]+".`tid`=`codedeployment`.`lt`.`tid` and " +
+                    "`codedeployment`.`lt`.`lid`=? and "+idname[type]+"=?";
+        else if(type==Constants.PRODUCTHOST)
+            whereclause=tablename[type]+".`pid`=`codedeployment`.`lp`.`pid` and " +
+                    "`codedeployment`.`lt`.`lid`=? and "+idname[type]+"=?";
         try {
-            String sql = "select * from " + tablename[type] + " where " + idname[type] + " = " + id;
+            String sql = "select * from " + table + " where " + idname[type] + " = " + id;
 
             if (id == -1)
                 sql = "select * from " + tablename[type];
@@ -444,12 +470,11 @@ public class DBOperationUtil {
             rs.next();
             PHostGroup group = new PHostGroup();
             group.setId(GID);
-            group.setHosts(queryHost(GID, Constants.PHOSTGROUP));
+            //group.setHosts(queryHost(GID, Constants.PHOSTGROUP));
             group.setName(rs.getString("GName"));
             group.setTID(rs.getInt("TID"));
             rs.close();
             prstmt.close();
-
             return group;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -559,7 +584,7 @@ public class DBOperationUtil {
             }
         } else if (type == Constants.TESTHOST) {
             try {
-                String sql = "UPDATE `codedeployment`.`testhost` " + "SET HAddress = ? " + "WHERE TID=? ";
+                String sql = "UPDATE `codedeployment`.`testhost` " + "SET Address = ? " + "WHERE TID=? ";
                 prstmt = connectDB().prepareStatement(sql);
                 prstmt.setString(1, host.getAddress());
                 prstmt.setInt(2, host.getId());
@@ -598,15 +623,14 @@ public class DBOperationUtil {
         if (type == Constants.LOCALHOST) {
             //插本地
             String name = "`codedeployment`.`LocalHost`";
-            PreparedStatement prstmt = null;
+            CallableStatement cstmt = null;
             try {
-                String sql = "insert into " + name + " values(?,?,?)";
-                prstmt = connectDB().prepareStatement(sql);
-                prstmt.setString(1, null);
-                prstmt.setString(2, host.getAddress());
-                prstmt.setString(3, ((LocalHost) host).getUser());
-                prstmt.executeUpdate();
-                prstmt.close();
+                cstmt = connectDB().prepareCall("{call `codedeployment`.`insertLocalHost`(?,?)}"); // 创建一个预编译的存储过程调用SQL语句
+                cstmt.setString(1, host.getAddress()); // 参数索引指定，第一个参数
+                cstmt.registerOutParameter(2, Types.INTEGER); // 注册输出参数以及其SQL类型
+                cstmt.execute(); // 执行存储过程
+                int lid = cstmt.getInt(2); // 计算完成后获取输出参数的值
+                CodeDeploySystem.setLid(lid);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return Constants.FAILURE;
@@ -614,16 +638,20 @@ public class DBOperationUtil {
             return Constants.SUCCESS;
         } else if (type == Constants.TESTHOST) {
             //插测试
-            String name = "`codedeployment`.`TestHost`";
-            PreparedStatement prstmt = null;
             try {
-                String sql = "insert into " + name + " values(?,?)";
-                prstmt = connectDB().prepareStatement(sql);
-                prstmt.setString(1, null);
-                prstmt.setString(2, host.getAddress());
-                prstmt.executeUpdate();
-                prstmt.close();
-
+//               String name = "`codedeployment`.`TestHost`";
+//                PreparedStatement prstmt;
+//                String sql = "insert into " + name + " values(?,?);";
+//                prstmt = connectDB().prepareStatement(sql);
+//                prstmt.setString(1, null);
+//                prstmt.setString(2, host.getAddress());
+//                prstmt.executeUpdate();
+//                prstmt.close();
+                CallableStatement cstmt;
+                cstmt = connectDB().prepareCall("{call `codedeployment`.`insertTestHost`(?,?)}"); // 创建一个预编译的存储过程调用SQL语句
+                cstmt.setString(1, host.getAddress()); // 参数索引指定，第一个参数
+                cstmt.setInt(2, CodeDeploySystem.getLid()); // 注册输出参数以及其SQL类型
+                cstmt.execute(); // 执行存储过程
             } catch (SQLException e) {
                 e.printStackTrace();
                 return Constants.FAILURE;
@@ -631,16 +659,22 @@ public class DBOperationUtil {
             return Constants.SUCCESS;
         } else if (type == Constants.PRODUCTHOST) {
             //插生产
-            String name = "`codedeployment`.`ProductHost` ";
-            PreparedStatement prstmt = null;
             try {
-                String sql = "insert into " + name + " values(?,?,?)";
-                prstmt = connectDB().prepareStatement(sql);
-                prstmt.setInt(1, querymaxPid());
-                prstmt.setString(2, host.getAddress());
-                prstmt.setInt(3, ((ProductHost) host).getLID());
-                prstmt.executeUpdate();
-                prstmt.close();
+//                String name = "`codedeployment`.`ProductHost` ";
+//                PreparedStatement prstmt = null;
+//                String sql = "insert into " + name + " values(?,?,?)";
+//                prstmt = connectDB().prepareStatement(sql);
+//                prstmt.setString(1, null);
+//                prstmt.setString(2, host.getAddress());
+//                prstmt.setInt(3, ((ProductHost) host).getGID());
+//                prstmt.executeUpdate();
+//                prstmt.close();
+                CallableStatement cstmt;
+                cstmt = connectDB().prepareCall("{call `codedeployment`.`insertProductHost`(?,?,?)}"); // 创建一个预编译的存储过程调用SQL语句
+                cstmt.setString(1, host.getAddress()); // 参数索引指定，第一个参数
+                cstmt.setInt(2,((ProductHost)host).getGID());
+                cstmt.setInt(3, CodeDeploySystem.getLid()); // 注册输出参数以及其SQL类型
+                cstmt.execute(); // 执行存储过程
             } catch (SQLException e) {
                 e.printStackTrace();
                 return Constants.FAILURE;
@@ -673,7 +707,7 @@ public class DBOperationUtil {
         try {
             String sql = "insert into " + name + " values(?,?,?)";
             prstmt = connectDB().prepareStatement(sql);
-            prstmt.setString(1, null);
+            prstmt.setNull(1, Types.INTEGER);
             prstmt.setString(2, group.getName());
             prstmt.setInt(3, group.getTID());
             prstmt.executeUpdate();
@@ -722,25 +756,36 @@ public class DBOperationUtil {
     public int insertCode(List<Code> code) {
         String SQL;
         PreparedStatement pst;
-        Connection dbconn = this.connectDB();
         Iterator<Code> it = code.iterator();
         Code comp;
-        SQL = "insert into`codedeployment`.`Codes`(CNO,CNAME,ISBACKUP,MD5,ONO)   values(?,?, ?, ?,?);";
+
 
         while (it.hasNext()) {
             comp = it.next();
             try {
-                pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-                pst.setInt(1, comp.getCno());
-                pst.setString(2, comp.getFilename());
-                pst.setBoolean(3, comp.isBackup());
-                pst.setString(4, comp.getMd5());
-                pst.setInt(5, comp.getOno());
-                pst.executeUpdate();
-                pst.close();
-            } catch (SQLException e) {
+//                SQL = "insert into`codedeployment`.`Codes`(CNO,CNAME,ISBACKUP,MD5,ONO)   values(?,?, ?, ?,?);";
+//                pst = connectDB().prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+//                pst.setInt(1, comp.getCno());
+//                pst.setString(2, comp.getFilename());
+//                pst.setBoolean(3, comp.isBackup());
+//                pst.setString(4, comp.getMd5());
+//                pst.setInt(5, comp.getOno());
+//                pst.executeUpdate();
+//                pst.close();
+
+                CallableStatement cstmt=connectDB().prepareCall("{call insertCode(?,?,?,?)}");
+                cstmt.setString(1,comp.getFilename());
+                if(comp.isBackup())
+                    cstmt.setInt(2,1);
+                else cstmt.setInt(2,0);
+                cstmt.setString(3,comp.getMd5());
+                cstmt.setInt(4,comp.getOno());
+                cstmt.execute();
+            }
+            catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                return Constants.FAILURE;
             }
         }
         return Constants.SUCCESS;
@@ -836,13 +881,12 @@ public class DBOperationUtil {
                 boolean isBackup2 = rs.getBoolean("isbackup");
                 String md5 = rs.getString("md5");
                 int ono = rs.getInt("ono");
-                codeList.add(new Code(cno, cname, isBackup2, md5, ono,""));
+                codeList.add(new Code(cno, cname, isBackup2, md5, ono));
             }
-
 
             rs.close();
             stmt.close();
-            conn.close();
+
         } catch (SQLException se) {
             se.printStackTrace();
         } catch (Exception e) {

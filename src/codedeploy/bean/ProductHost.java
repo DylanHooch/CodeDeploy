@@ -9,11 +9,11 @@ public class ProductHost extends Host{
         this.GID=GID;
     }
 
-    public int getLID() {
+    public int getGID() {
         return GID;
     }
 
-    public void setLID(int LID) {
+    public void setGID(int LID) {
         this.GID = LID;
     }
 

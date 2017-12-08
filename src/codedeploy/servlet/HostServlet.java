@@ -85,7 +85,7 @@ public class HostServlet extends HttpServlet {
         hosts.add(new ProductHost(5,"222.301",2));
         hosts.add(new ProductHost(6,"222.302",2));
         grouplist.add(new PHostGroup(hosts,2,"222.300",2));
-        nodes.add(new Node(123,0,-1,"", CodeDeploySystem.localAddress));
+        nodes.add(new Node(123,0,-1,"", CodeDeploySystem.getLocalAddress()));
         for(int i=0;i<grouplist.size();i++)
         {
             hosts=grouplist.get(i).getHosts();
