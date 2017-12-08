@@ -1,3 +1,7 @@
+<%@ page import="codedeploy.bean.DeployOrder" %>
+<%@ page import="java.util.List" %>
+<%@ page import="codedeploy.bean.PHostGroup" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: wsz
@@ -7,6 +11,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
+
+<%
+    List<DeployOrder> orders = (List<DeployOrder>)request.getAttribute("allorder");
+%>
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -16,7 +25,7 @@
 
 <main>
     <div>
-        <font size="6" color="blue">订单管理</font>
+        <legend class="bg-info text-light">订单创建</legend>
         <p></p>
     </div>
 
@@ -40,56 +49,50 @@
 
     <div >
         <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#createOrder">增加</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="alert('发布')">发布</button>
-        <button id="rb" class="btn btn-outline-secondary" type="button" onclick="rollback(1);">回滚</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="confirm1(1)">发布</button>
+        <button id="rb" class="btn btn-outline-secondary" type="button" onclick="confirm1(2)">回滚</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('删除')">删除</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('刷新')">刷新</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
     </div>
     <p></p>
-
-    <table class="table table-hover table-bordered table-responsive" >
+    `
+    <table id="table1" class="table table-hover table-bordered table-responsive" >
         <thead >
         <tr>
             <th>选择</th>
             <th>订单名称</th>
-            <th>订单描述</th>
             <th>目标机备份</th>
             <th>发布状态</th>
-            <th >回滚状态</th>
-            <th>创建者</th>
             <th>订单创建日期</th>
-            <th>最新执行时间</th>
-            <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td><input type="radio" name="selecttr" checked="checked" /></td>
-            <td>订购景栓上门</td>
-            <td>VIP订单</td>
-            <td>无备份</td>
-            <td >已发布</td>
-            <td name="rb_state">未回滚</td>
-            <td>C12各基佬</td>
-            <td>2017/11/27</td>
-            <td>2017/11/27</td>
-            <td><a href="1.jpg">啪啪啪</a></td>
+        <% if(orders!=null){
+            int row=1;
+            for(DeployOrder order : orders ) {%>
+        <tr name="777">
+            <td><input type="radio" name="selecttr" value="<%=row++ %>" check="checked"/></td>
+            <td name="idd" style="display: none"><%=order.getOno()%></td>
+            <td><%= order.getName()%></td>
+            <td >
+                <%if(true) {%>
+                已备份
+                <%}else {%>
+                未备份
+                <%}%>
+            </td>
+            <td>
+                <%if(order.isReleased()==true) {%>
+                已发布
+                <%}else {%>
+                未发布
+                <%}%>
+            </td>
 
+            <td ><%= order.getDate()%></td>
         </tr>
-        <tr>
-            <td><input type="radio" name="selecttr"/></td>
-            <td>订购景栓上门</td>
-            <td>VIP订单</td>
-            <td>无备份</td>
-            <td>已发布</td>
-            <td name="rb_state">未回滚</td>
-            <td>C12各基佬</td>
-            <td>2017/11/27</td>
-            <td>2017/11/27</td>
-            <td><a href="1.jpg">啪啪啪</a></td>
-
-        </tr>
+        <%}}%>
         </tbody>
     </table>
 
@@ -116,49 +119,73 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createOrderLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="createOrder" tabindex="-1" role="dialog" aria-labelledby="createOrderLabel" aria-hidden="true">
+    <div class="modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <h4 class="modal-title" id="createOrderLabel">创建新订单</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <!--一个叉 -->
                     &times;
                 </button>
-                <h4 class="modal-title" id="createOrderLabel">创建新订单</h4>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <div class="modal-body" id="createordercontent">
+                    <s:action name="order_refresh" executeResult="true" >
+                    </s:action>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+
+
+
 <script type="text/javascript">
-
-
-
+    function checkselectrow(){
+        var row=document.getElementById("table1").rows.length;
+        for(var i=0;i<row;i++){
+            //if(table.rows[i].cells.innerHTML==)
+        }
+    }
+    function confirm1(num){
+        var id=table1.rows[$("input[name='selecttr']:checked").val()].cells[1].innerHTML;
+        if(num==1){
+            result = confirm("确定发布该订单吗？");
+            if (result == true) {
+                release(id);
+            }
+        }
+        else if(num==2) {
+            result = confirm("确定回滚该订单吗？");
+            if (result == true) {
+                rollback(id);
+            }
+        }
+    }
     function rollback(id)
     {
         $.ajax({
-            url:"/rollback?id="+id,
+            url:"/orderrollback?id="+id,
             type:"get",
-            data:{id:id},
-            success:function(data){
+            success:function(){
                 //$("#rb_state").text("已回滚");
+                //find(document.getElementsByName("idd").text()));
+                alert("777")
 
-
-                var $c=$("input[name='selecttr']:checked").parents('tr').find(document.getElementsByName("rb_state"));
-                $c.text("已回滚")
-
-                alert(id+"订单已回滚");
             }
         });
     }
-
+    function release(id)
+    {
+        $.ajax({
+            url:"/orderrelease?id="+id,
+            type:"get",
+            success:function(){
+                //$("#rb_state").text("已回滚");
+                alert("6666")
+            }
+        });
+    }
 </script>
 
 <script src="js/jquery-3.2.1.js"></script>
