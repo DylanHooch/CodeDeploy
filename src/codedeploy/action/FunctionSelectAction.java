@@ -2,12 +2,9 @@ package codedeploy.action;
 
 import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +47,7 @@ public class FunctionSelectAction extends ActionSupport{
         List<PHostGroup> groupList=dbo.queryGroup();
         session.put("groupList",groupList);
         request.put("tid",groupList.get(0).getTID());
+
         return "manageorder";
     }
 
