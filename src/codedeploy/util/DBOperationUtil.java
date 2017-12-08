@@ -229,14 +229,14 @@ public class DBOperationUtil {
         String sql = "select * from `codedeployment`.`ProductHost`, `codedeployment`.`LP` " +
                 "where `codedeployment`.`ProductHost`.`PID`=`codedeployment`.`lp`.`PID`" +
                 " and `codedeployment`.`lp`.`lid`=?" +
-                "and GID=? " ;
+                " and GID=?;" ;
         ResultSet rs=null;
         List<Host> hostlist=new ArrayList<>();
         try {
             PreparedStatement stat = dbConn.prepareStatement(sql);
             stat.setInt(1,CodeDeploySystem.getLid());
             stat.setInt(2,GID);
-            rs = stat.executeQuery(sql);
+            rs = stat.executeQuery();
             while(rs.next())
             {
                 hostlist.add(new ProductHost(rs.getInt("PID"), rs.getString("Address"), rs.getInt("GID")));
@@ -292,7 +292,7 @@ public class DBOperationUtil {
 
     private ResultSet queryHost_help(int id, int type, Connection conn) {
         String tablename[] = {"", "", "", "`codedeployment`.`LocalHost`", "`codedeployment`.`TestHost`", "`codedeployment`.`ProductHost`", "`codedeployment`.`ProductHost`"};//此处与Constants中的常量绑定，修改Constants则此处也需要修改
-        String idname[] = {"", "", "", "LID", "TID", "PID", "GID"};
+        String idname[] = {"", "", "", "LID", "`codedeployment`.`testhost`.`TID`", "`codedeployment`.`producthost`.PID", "GID"};
         String table;
         if(type==Constants.TESTHOST)
             table=tablename[type]+",`codedeployment`.`lt`";
@@ -302,17 +302,20 @@ public class DBOperationUtil {
         String whereclause;
         if(type==Constants.TESTHOST)
             whereclause=tablename[type]+".`tid`=`codedeployment`.`lt`.`tid` and " +
-                    "`codedeployment`.`lt`.`lid`=? and "+idname[type]+"=?";
+                    "`codedeployment`.`lt`.`lid`=?";
         else if(type==Constants.PRODUCTHOST)
             whereclause=tablename[type]+".`pid`=`codedeployment`.`lp`.`pid` and " +
-                    "`codedeployment`.`lt`.`lid`=? and "+idname[type]+"=?";
+                    "`codedeployment`.`lp`.`lid`=?";
+        else whereclause=" ";
         try {
-            String sql = "select * from " + table + " where " + idname[type] + " = " + id;
-
+            String sql = "select * from " + table + " where " + whereclause+" and "+idname[type]+"=?;";
             if (id == -1)
-                sql = "select * from " + tablename[type];
-            Statement stat = conn.createStatement();
-            ResultSet rs = stat.executeQuery(sql);
+                sql = "select * from " + table+" where "+whereclause+";";
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setInt(1,CodeDeploySystem.getLid());
+            if(id!=-1)
+                stat.setInt(2,id);
+            ResultSet rs = stat.executeQuery();
             return rs;
         } catch (Exception e) {
             e.printStackTrace();
