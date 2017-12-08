@@ -46,9 +46,10 @@ public class DBOperationUtil {
         if (dayNum == 0)
         //返回包含全部订单的list
         {
-            SQL = "select * from `codedeployment`.`Orders`";
+            SQL = "select * from `codedeployment`.`orders` where `orders`.`LID`=?";
             try {
                 pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+                pst.setInt(1,1);
                 rs = pst.executeQuery();
                 int ColumnCount = rs.getMetaData().getColumnCount();
                 Columnname = new String[ColumnCount];
@@ -72,10 +73,10 @@ public class DBOperationUtil {
                     if(isReleasedInt==1)
                         isReleased=true;
                     dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased));
+
                 }
                 dbconn.close();
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return null;
             }
@@ -84,10 +85,11 @@ public class DBOperationUtil {
         } else
         //返回dayNum天内订单的list
         {
-            SQL = "SELECT * FROM `codedeployment`.`Orders` ORDER BY `日期` DESC  LIMIT 0,?;";
+            SQL = "SELECT * FROM `codedeployment`.`Orders` where `LID`=? and DATE_SUB(CURDATE(), INTERVAL ? DAY) <= date(`odate`) ORDER BY `odate` DESC;";
             try {
                 pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-                pst.setInt(1, dayNum);
+                pst.setInt(1,1);
+                pst.setInt(2, dayNum);
                 rs = pst.executeQuery();
                 while (rs.next()) {
                     int ono = rs.getInt("ONO");
@@ -95,7 +97,7 @@ public class DBOperationUtil {
                     TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                     PHostGroup targetGroup = (PHostGroup) queryGroup(rs.getInt("targetGroup"));
                     String name = rs.getString("OName");
-                    List<Code> codeList = queryCode(-1, null, false, null, ono);
+                    List<Code> codeList = queryCode(-1, "", false, "", ono);
                     List<String> codePathList = new ArrayList<>(codeList.size());
                     List<Integer> codeIDList = new ArrayList<>(codeList.size());
                     for (int i = 0; i < codePathList.size(); i++) {
@@ -122,7 +124,7 @@ public class DBOperationUtil {
         ResultSet rs = null;
         PreparedStatement pst;
         List<DeployOrder> dporders = new ArrayList();
-        SQL = "SELECT * FROM `codedeployment`.`Orders` WHERE OName = ? ORDER BY `日期` DESC;";
+        SQL = "SELECT * FROM `codedeployment`.`Orders` WHERE OName = ? ORDER BY  `odate`  DESC;";
         try {
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, name);
@@ -150,7 +152,42 @@ public class DBOperationUtil {
         }
         return dporders;
     }
+    public List<DeployOrder> queryOrderByBriefName(String name,int dayNum) {
+        String SQL;
+        Connection dbconn = this.connectDB();
+        ResultSet rs = null;
+        PreparedStatement pst;
+        List<DeployOrder> dporders = new ArrayList();
+        SQL = "SELECT * FROM `codedeployment`.`Orders` where `LID`=? and DATE_SUB(CURDATE(), INTERVAL ? DAY) <= date(`odate`) and OName like '%"+name+"%'ORDER BY  `odate`  DESC;";
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, 1);
+            pst.setInt(2, dayNum);
+            rs = pst.executeQuery();
+            System.out.println(rs.getFetchSize());
+            while (rs.next()) {
+                int ono = rs.getInt("ONO");
+                java.util.Date date = rs.getTimestamp("ODate");
+                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
+                PHostGroup targetGroup = (PHostGroup) queryGroup(rs.getInt("targetGroup"));
+                List<Code> codeList = queryCode(-1, "", false, "", ono);
+                List<String> codePathList = new ArrayList<>(codeList.size());
+                List<Integer> codeIDList = new ArrayList<>(codeList.size());
+                for (int i = 0; i < codePathList.size(); i++) {
+                    codePathList.add(codeList.get(i).getFilePath());
+                    codeIDList.add(codeList.get(i).getCno());
+                }
+                boolean isReleased = rs.getBoolean("isReleased");
+                dporders.add(new DeployOrder(ono,rs.getString("OName"), date, testHost, targetGroup, codePathList, codeIDList, isReleased));
+            }
 
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        return dporders;
+    }
     //TODO 改插入的LID
     public int insertOrder(DeployOrder order) {/////LID
         String SQL;
@@ -803,7 +840,6 @@ public class DBOperationUtil {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = connectDB();
-            System.out.println(CNO);
             String sql;
             int i = 1;
             sql = "SELECT * from " + "`codedeployment`.`Codes` where " + whereClause;

@@ -5,6 +5,14 @@
          version="3.1">
     <display-name>hello world!</display-name>
     <servlet>
+        <servlet-name>RecentOrder</servlet-name>
+        <servlet-class>codedeploy.servlet.RecentOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RecentOrder</servlet-name>
+        <url-pattern>/recentorder</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>Phostinsert</servlet-name>
         <servlet-class>codedeploy.servlet.HostInsertPhostServlet</servlet-class>
     </servlet>

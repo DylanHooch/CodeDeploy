@@ -32,10 +32,24 @@
         </div>
     </div>
     <div style="width:900px;height:200px;float:left;" id="simpleorderlist">
-        <s:include value="recentOrderChart.jsp">
-            <s:param name="orderList" value="#request.recentOrders"/>
-        </s:include>
+        <%--<s:include value="recentOrderChart.jsp">--%>
+            <%--<s:param name="orderList" value="#request.recentOrders"/>--%>
+        <%--</s:include>--%>
     </div>
 </div>
 </body>
 </html>
+<script>
+    $.ajax({
+        url: "/recentorder?type=0",
+        type: 'get',
+        error: function (json) {
+            alert("Not Recent Orders");
+        },
+        async: false,
+        success: function (html) {
+            $("#simpleorderlist").html(html);
+
+        }
+    });
+</script>

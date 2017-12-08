@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<DeployOrder> orders = (List<DeployOrder>)request.getAttribute("allorder");
+    List<DeployOrder> orders = (List<DeployOrder>)request.getAttribute("dporders");
 %>
 
 <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -23,9 +23,9 @@
 
         <form class="form-inline col-lg-4" role="form">
             <div class="input-group " >
-                <input type="text" class="form-control" >
+                <input type="text" class="form-control" id="text" placeholder="订单名称" >
                 <span class="input-group-btn">
-					<button class="btn btn-outline-secondary" type="button">
+					<button class="btn btn-outline-secondary" type="button" onclick="javascript:search(document.getElementById('text').value)">
 						Search
 					</button>
 				</span>
@@ -49,16 +49,18 @@
         <td><input type="radio" name="selecttr" checked="checked" /></td>
         <td><%= order.getName()%></td>
         <td>
-            <%
-                if(order.isReleased()==true) System.out.println("已备份");
-                else System.out.println("未备份");
-            %>
+            <%if(order.isReleased()==true) {%>
+            已备份
+            <%}else {%>
+            未备份
+            <%}%>
         </td>
         <td>
-            <%
-                if(order.isReleased()==true) System.out.println("已发布");
-                else System.out.println("未发布");
-            %>
+            <%if(order.isReleased()==true) {%>
+            已发布
+            <%}else {%>
+            未发布
+            <%}%>
         </td>
 
         <td ><%= order.getDate()%></td>
@@ -69,4 +71,21 @@
 <div align="right" >
     <button type ="button" class="btn btn-outline-secondary" onclick="window.location='select_manageOrder.action';">更多</button>
 </div>
-</div>
+
+<script type="text/javascript" >
+
+function search(text) {
+$.ajax({
+url: "/recentorder?text="+text+"&type=1",
+type: 'get',
+error: function (json) {
+alert("not lived!");
+},
+async: false,
+success: function (html) {
+$("#simpleorderlist").html(html);
+
+}
+});
+}
+</script>
