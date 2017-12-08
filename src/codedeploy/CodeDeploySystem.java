@@ -14,7 +14,8 @@ import java.util.List;
 public class CodeDeploySystem {
     private int status;
     private int dataBaseStatus;
-    public static String localAddress;
+    private static String localAddress;
+    private static int lid;
     static{
         //获取本机的IP
         try {
@@ -36,7 +37,13 @@ public class CodeDeploySystem {
         {
             e.printStackTrace();
         }
+        DBOperationUtil dbo=new DBOperationUtil();
+        dbo.insertHost(new LocalHost(localAddress));
     }
+    public static int getLid(){return lid;}
+    public static void setLid(int lid){CodeDeploySystem.lid=lid;}
+    public static String getLocalAddress(){return localAddress;}
+    public static void setLocalAddress(String address){localAddress=address;}
     public int CreateOrder(DeployOrder order)
     {
         FetchFileUtil ffu=new FetchFileUtil();

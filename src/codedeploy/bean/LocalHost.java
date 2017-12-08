@@ -5,6 +5,10 @@ package codedeploy.bean;
 public class LocalHost extends Host {
     private String user;
     public LocalHost(){super();}
+    public LocalHost(String address)
+    {
+        super(0,address);
+    }
     public LocalHost(int id,String address,String user)
     {
         super(id,address);

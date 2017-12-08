@@ -43,7 +43,7 @@ public class DynamicTreeAction extends ActionSupport{
         DBOperationUtil dbo=new DBOperationUtil();
         List<PHostGroup> groups;
         //根节点：本地主机
-        nodes.add(new Node(123,0,-1,"", CodeDeploySystem.localAddress));
+        nodes.add(new Node(CodeDeploySystem.getLid(),0,-1,"", CodeDeploySystem.getLocalAddress()));
         //第一层子节点：测试主机
         List<Host> testHosts=dbo.queryHost(-1, Constants.TESTHOST);
         TestHost testHost;

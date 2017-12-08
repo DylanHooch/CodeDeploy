@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="codedeployment@rm-wz9h00p5lzhh2mkbjao.mysql.rds.aliyuncs.com">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="codedeployment">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="dbase"/>
+    <schema id="4" parent="1" name="information_schema"/>
+    <schema id="5" parent="1" name="mysql"/>
+    <schema id="6" parent="1" name="performance_schema"/>
+    <schema id="7" parent="1" name="sys"/>
+    <table id="8" parent="2" name="codes"/>
+    <table id="9" parent="2" name="lc"/>
+    <table id="10" parent="2" name="localhost"/>
+    <table id="11" parent="2" name="lp"/>
+    <table id="12" parent="2" name="lt"/>
+    <table id="13" parent="2" name="orders"/>
+    <table id="14" parent="2" name="phostgroup"/>
+    <table id="15" parent="2" name="producthost"/>
+    <table id="16" parent="2" name="testhost"/>
+    <column id="17" parent="8" name="CNO">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="18" parent="8" name="Cname">
+      <Position>2</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="19" parent="8" name="IsBackup">
+      <Position>3</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <column id="20" parent="8" name="MD5">
+      <Position>4</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="21" parent="8" name="ONO">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="22" parent="8" name="isReleased">
+      <Position>6</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <index id="23" parent="8" name="onoref">
+      <ColNames>ONO</ColNames>
+    </index>
+    <key id="24" parent="8" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>CNO</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="25" parent="8" name="onoref">
+      <ColNames>ONO</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>orders</RefTableName>
+      <RefColNames>ONO</RefColNames>
+    </foreign-key>
+    <column id="26" parent="9" name="LID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="27" parent="9" name="CNO">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="28" parent="9" name="PATH">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="29" parent="9" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>LID
+CNO</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="30" parent="9" name="lc_lidref">
+      <ColNames>LID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>localhost</RefTableName>
+      <RefColNames>LID</RefColNames>
+    </foreign-key>
+    <column id="31" parent="10" name="LID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="32" parent="10" name="Address">
+      <Position>2</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="33" parent="10" name="User">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <key id="34" parent="10" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>LID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="35" parent="11" name="LID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="36" parent="11" name="PID">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="37" parent="11" name="lp_pidref">
+      <ColNames>PID</ColNames>
+    </index>
+    <key id="38" parent="11" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>LID
+PID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="39" parent="11" name="lp_lidref">
+      <ColNames>LID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>localhost</RefTableName>
+      <RefColNames>LID</RefColNames>
+    </foreign-key>
+    <foreign-key id="40" parent="11" name="lp_pidref">
+      <ColNames>PID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>producthost</RefTableName>
+      <RefColNames>PID</RefColNames>
+    </foreign-key>
+    <column id="41" parent="12" name="LID">
+      <Position>1</Position>
+      <DataType>int(32)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="12" name="TID">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="43" parent="12" name="lt_tidref">
+      <ColNames>TID</ColNames>
+    </index>
+    <key id="44" parent="12" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>LID
+TID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="45" parent="12" name="lt_lidref">
+      <ColNames>LID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>localhost</RefTableName>
+      <RefColNames>LID</RefColNames>
+    </foreign-key>
+    <foreign-key id="46" parent="12" name="lt_tidref">
+      <ColNames>TID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>testhost</RefTableName>
+      <RefColNames>TID</RefColNames>
+    </foreign-key>
+    <column id="47" parent="13" name="ONO">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="48" parent="13" name="ODate">
+      <Position>2</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="49" parent="13" name="TargetGroup">
+      <Position>3</Position>
+      <DataType>int(32)|0</DataType>
+    </column>
+    <column id="50" parent="13" name="TargetTHost">
+      <Position>4</Position>
+      <DataType>int(32)|0</DataType>
+    </column>
+    <column id="51" parent="13" name="LID">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="52" parent="13" name="IsReleased">
+      <Position>6</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <column id="53" parent="13" name="OName">
+      <Position>7</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <index id="54" parent="13" name="orders_lidref">
+      <ColNames>LID</ColNames>
+    </index>
+    <index id="55" parent="13" name="targetgroupref">
+      <ColNames>TargetGroup</ColNames>
+    </index>
+    <index id="56" parent="13" name="targetthostref">
+      <ColNames>TargetTHost</ColNames>
+    </index>
+    <key id="57" parent="13" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>ONO</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="58" parent="13" name="targetgroupref">
+      <ColNames>TargetGroup</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>phostgroup</RefTableName>
+      <RefColNames>GID</RefColNames>
+    </foreign-key>
+    <foreign-key id="59" parent="13" name="targetthostref">
+      <ColNames>TargetTHost</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>testhost</RefTableName>
+      <RefColNames>TID</RefColNames>
+    </foreign-key>
+    <foreign-key id="60" parent="13" name="orders_lidref">
+      <ColNames>LID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>localhost</RefTableName>
+      <RefColNames>LID</RefColNames>
+    </foreign-key>
+    <column id="61" parent="14" name="GID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="62" parent="14" name="GName">
+      <Position>2</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="63" parent="14" name="TID">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="64" parent="14" name="tidref">
+      <ColNames>TID</ColNames>
+    </index>
+    <key id="65" parent="14" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>GID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="66" parent="14" name="tidref">
+      <ColNames>TID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>testhost</RefTableName>
+      <RefColNames>TID</RefColNames>
+    </foreign-key>
+    <column id="67" parent="15" name="PID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="68" parent="15" name="Address">
+      <Position>2</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="69" parent="15" name="GID">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <index id="70" parent="15" name="gidref">
+      <ColNames>GID</ColNames>
+    </index>
+    <key id="71" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>PID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="72" parent="15" name="gidref">
+      <ColNames>GID</ColNames>
+      <RefSchemaName>codedeployment</RefSchemaName>
+      <RefTableName>phostgroup</RefTableName>
+      <RefColNames>GID</RefColNames>
+    </foreign-key>
+    <column id="73" parent="16" name="TID">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="74" parent="16" name="HAddress">
+      <Position>2</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <key id="75" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>TID</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

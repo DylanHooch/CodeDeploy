@@ -8,16 +8,14 @@ public class Code {
     private boolean isBackup;
     private String md5;
     private int ono;
-    private String filePath;
     public Code(){};
-    public Code(int cno,String filename,boolean isBackup,String md5,int ono,String filePath)
+    public Code(int cno,String filename,boolean isBackup,String md5,int ono)
     {
         this.cno=cno;
         this.filename=filename;
         this.isBackup=isBackup;
         this.md5=md5;
         this.ono=ono;
-        this.filePath=filePath;
 }
     public int getCno() {
         return cno;
@@ -58,11 +56,4 @@ public class Code {
         this.ono = ono;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
 }
