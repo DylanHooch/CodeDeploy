@@ -102,7 +102,7 @@ public class CodeDeploySystem {
         List<Code> codeList=new ArrayList<>();
         for(i=0;i<codeIDList.size();i++) {
             codeList.addAll(dbo.queryCode(codeIDList.get(i),"", false, "", id));
-            dbo.updateCodeisBackup(codeIDList.get(i));//修改数据库备份状态
+            dbo.updateCodeBackupStatus(codeIDList.get(i));//修改数据库备份状态
         }//拿到order对应的codeList
         List<Host> hosts=orderlist.get(i).getTargetGroup().getHosts();
         //把备份直接传到订单对应的组下的所有主机
