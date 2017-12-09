@@ -33,7 +33,7 @@ public class FunctionSelectAction extends ActionSupport{
     public String execute() throws Exception {
         DBOperationUtil dbo=new DBOperationUtil();
         localhost=(LocalHost)dbo.queryHost(-1, Constants.LOCALHOST);
-        groups=dbo.queryGroup();
+        groups=dbo.queryGroup(false);
         recentOrders=dbo.queryOrder(10);
         return SUCCESS;
     }
@@ -42,11 +42,12 @@ public class FunctionSelectAction extends ActionSupport{
         DBOperationUtil dbo=new DBOperationUtil();
         Map request=(Map) ActionContext.getContext().get("request");
         Map session=(Map) ActionContext.getContext().getSession();
+        List<Host> testHosts=dbo.queryHost(-1,Constants.TESTHOST);
         request.put("allorder",dbo.queryOrder(0));
-        session.put("hostList",dbo.queryHost(-1,Constants.TESTHOST));
-        List<PHostGroup> groupList=dbo.queryGroup();
+        session.put("hostList",testHosts);
+        List<PHostGroup> groupList=dbo.queryGroup(false);
         session.put("groupList",groupList);
-        request.put("tid",groupList.get(0).getTID());
+        request.put("tid",testHosts.get(0).getId());
 
         return "manageorder";
     }

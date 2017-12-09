@@ -5,6 +5,7 @@ import codedeploy.util.DBOperationUtil;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,12 +23,33 @@ public class HostInsertServlet extends javax.servlet.http.HttpServlet {
             int type = Integer.parseInt(request.getParameter("type"));
             String address = request.getParameter("Address");
             int id = Integer.parseInt(request.getParameter("id"));
+            response.setCharacterEncoding("utf-8");
+            PrintWriter out = response.getWriter();
+
             if(type== Constants.TESTHOST){
                 PHostGroup phg=new PHostGroup(-1,address,id);
                 dbo.insertGroup(phg);
-
+                out.print("数据增加成功");
             }
           else {
+                String ip[]=address.split("\\.");
+                int ipnum[]=new int[4];
+                if(ip.length!=4)
+                {
+                    out.print("增加失败,请确认输入ip地址是否合法");
+                    return;
+                }
+                else
+                {
+                    for(int i=0;i<4;i++)
+                        ipnum[i]=Integer.parseInt(ip[i]);
+                    if(!(ipnum[0]<256&&ipnum[0]>-1&&ipnum[1]<256&&ipnum[1]>-1&&ipnum[2]<256&&ipnum[2]>-1&&ipnum[3]<256&&ipnum[3]>-1))
+                    {
+                        out.print("增加失败,请确认输入ip地址是否合法");
+                        return;
+                    }
+
+                }
                 //insert
                 Host inshost = new TestHost(id, address);
                 switch (type) {
@@ -44,6 +66,7 @@ public class HostInsertServlet extends javax.servlet.http.HttpServlet {
                 }
                 if (!flg)
                     dbo.insertHost(inshost);
+                out.print("数据增加成功");
             }
         }
 

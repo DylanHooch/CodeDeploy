@@ -29,13 +29,14 @@ int tid=(int)request.getAttribute("tid");
                 <div class="col-lg-2 col-md-1 col-xs-1 col-sm-1">
                     <select name="tid" id="datum_application" class="form-control">
                         <% for( Host host : hostList) {%>
-                        <option  value="<%= host.getId()%>" onclick="refresh(this.value)"><%= host.getAddress()%></option>
+                        <option  name="tidop" value="<%=host.getId()%>" onclick="refresh(this.value)"><%= host.getAddress()%></option>
                         <%}%>
                     </select>
                     <script type="text/javascript">
-                        $("option[name='tid']").each(function(){
-                            if($(this).val()==<%=tid%>)
+                        $("option[name='tidop']").each(function(){
+                            if($(this).val()==<%=tid%>){
                                 $(this).attr("selected","true");
+                            }
                         });
                     </script>
                 </div>

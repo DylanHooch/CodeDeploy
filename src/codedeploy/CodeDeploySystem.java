@@ -44,7 +44,7 @@ public class CodeDeploySystem {
     public static void setLid(int lid){CodeDeploySystem.lid=lid;}
     public static String getLocalAddress(){return localAddress;}
     public static void setLocalAddress(String address){localAddress=address;}
-    public int CreateOrder(DeployOrder order)
+    public int createOrder(DeployOrder order)
     {
         FetchFileUtil ffu=new FetchFileUtil();
         List<String> fpaths=order.getCodePathList();
