@@ -81,21 +81,24 @@ public class CodeDeploySystem {
     public static int rollBackOrder(int id){
         DBOperationUtil dbo=new DBOperationUtil();
         FetchFileUtil ffu=new FetchFileUtil();
-        List<DeployOrder>orderlist=dbo.queryOrder(0);//拿到所有order
+        List<DeployOrder> orderlist=dbo.queryOrderByID(id);
+//        List<DeployOrder>orderlist=dbo.queryOrder(0);//拿到所有order
         int i;
-        for(i=0;i<orderlist.size();i++)
-        {
-            if(orderlist.get(i).isReleased()) {
-                if(orderlist.get(i).getOno()==id)
-                    break;
-                else
-                    return Constants.FAILURE;
-            }
+//        for(i=0;i<orderlist.size();i++)
+//        {
+//            if(orderlist.get(i).isReleased()) {
+//                if(orderlist.get(i).getOno()==id)
+//                    break;
+//                else
+//                    return Constants.FAILURE;
+//            }
+//        }
+//
+//        判断order能不能回滚，如果最新的order的id不等于id则返回-1
+        List<Integer> codeIDList=new ArrayList<>();
+        for(i=0;i<orderlist.size();i++) {
+           codeIDList = orderlist.get(i).getCodeIDList(); //拿到order对应的codeIDList
         }
-
-        //判断order能不能回滚，如果最新的order的id不等于id则返回-1
-
-        List<Integer> codeIDList=orderlist.get(i).getCodeIDList(); //拿到order对应的codeIDList
         List<Code> codeList=new ArrayList<>();
         for(i=0;i<codeIDList.size();i++) {
             codeList.addAll(dbo.queryCode(codeIDList.get(i),"", false, "", id));
