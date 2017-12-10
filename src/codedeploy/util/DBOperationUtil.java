@@ -135,7 +135,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
-                List<Code> codeList = queryCode(-1, null, false, null, ono);
+                List<Code> codeList = queryCode(-1, "", true, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
                 for (int i = 0; i < codePathList.size(); i++) {

@@ -106,7 +106,7 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        int ono=Integer.parseInt(request.getParameter("ono"));
+        int ono=Integer.parseInt(request.getParameter("id"));
         dbo.deleteOrder(ono);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
@@ -119,8 +119,8 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        String name=request.getParameter("oname");
-        List<DeployOrder> orders=dbo.queryOrderByName(oname);
+        String name=request.getParameter("order_name");
+        List<DeployOrder> orders=dbo.queryOrderByName(name);
         request.setAttribute("allorder",orders);
 
         return SUCCESS;
