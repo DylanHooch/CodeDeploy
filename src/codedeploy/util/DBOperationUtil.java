@@ -171,7 +171,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
-                List<Code> codeList = queryCode(-1, null, false, null, ono);
+                List<Code> codeList = queryCode(-1, "", false, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
                 for (int i = 0; i < codePathList.size(); i++) {
@@ -798,3 +798,261 @@ public class DBOperationUtil {
     public int deleteGroup(int GID) {
 
         PreparedStatement prstmt = null;
+        String sql="DELETE FROM `codedeployment`.`phostgroup`  WHERE GID = ?";
+        try {
+            prstmt = connectDB().prepareStatement(sql);
+            prstmt.setInt(1, GID);
+            prstmt.execute();
+            prstmt.close();
+            deleteHosbyGID(GID);
+            return Constants.SUCCESS;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+
+    public int deleteOrder(int ono){
+        PreparedStatement prstmt = null;
+        String sql="DELETE FROM `codedeployment`.`ORDERS` "+" WHERE ONO = ?";
+        try {
+            prstmt = connectDB().prepareStatement(sql);
+            prstmt.setInt(1, ono);
+            prstmt.execute();
+            prstmt.close();
+            return Constants.SUCCESS;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Constants.FAILURE;
+    }
+
+    public int insertCode(List<Code> code) {
+        String SQL;
+        PreparedStatement pst;
+        Iterator<Code> it = code.iterator();
+        Code comp;
+
+
+        while (it.hasNext()) {
+            comp = it.next();
+            try {
+//                SQL = "insert into`codedeployment`.`Codes`(CNO,CNAME,ISBACKUP,MD5,ONO)   values(?,?, ?, ?,?);";
+//                pst = connectDB().prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+//                pst.setInt(1, comp.getCno());
+//                pst.setString(2, comp.getFilename());
+//                pst.setBoolean(3, comp.isBackup());
+//                pst.setString(4, comp.getMd5());
+//                pst.setInt(5, comp.getOno());
+//                pst.executeUpdate();
+//                pst.close();
+
+                CallableStatement cstmt=connectDB().prepareCall("{call insertCode(?,?,?,?)}");
+                cstmt.setString(1,comp.getFilename());
+                if(comp.isBackup())
+                    cstmt.setInt(2,1);
+                else cstmt.setInt(2,0);
+                cstmt.setString(3,comp.getMd5());
+                cstmt.setInt(4,comp.getOno());
+                cstmt.execute();
+            }
+            catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return Constants.FAILURE;
+            }
+        }
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+
+    }
+
+    public int deleteCode(int CNO) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            conn=connectDB();
+            String sql;
+            sql = "delete  from "+"`codedeployment`.`Codes` where cno=?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, CNO);
+            int rs = stmt.executeUpdate();
+            System.out.println("Delete !");//
+
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            se.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+    }
+
+
+
+    public List<Code> queryCode(int CNO, String CName, Boolean isBackup, String MD5, int ONO) {
+        List<Code> codeList = new ArrayList<Code>();
+
+        Connection conn = null;
+        PreparedStatement stmt=null;
+        String whereClause = "";
+        if (CNO != -1) whereClause += "cno=? and ";
+        if (CName.length() != 0) whereClause += "cname=? and ";
+        if (isBackup != null) whereClause += "isBackup=? and ";
+        if (MD5.length() != 0) whereClause += "md5=? and ";
+        if (ONO != -1) whereClause += "ono=? and ";// and?
+        //if (filePath.length() != 0) whereClause += "filepath=? and ";
+        whereClause = whereClause.substring(0, whereClause.length() - 5);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = connectDB();
+            System.out.println(CNO);
+            String sql;
+            int i = 1;
+            sql = "SELECT * from " + "`codedeployment`.`Codes` where " + whereClause;
+            //sql = "SELECT * from " + "`CodeDeploy`.`Codes`";
+            stmt = conn.prepareStatement(sql);
+            if (CNO != -1) {
+                stmt.setInt(i, CNO);
+                i++;
+            }
+            if (CName.length() != 0) {
+                stmt.setString(i, CName);
+                i++;
+            }
+            if (isBackup != null) {
+                stmt.setBoolean(i, isBackup);
+                i++;
+            }
+            if (MD5.length() != 0) {
+                stmt.setString(i, MD5);
+                i++;
+            }
+            if (ONO != -1)
+                stmt.setInt(i, ONO);
+
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int cno = rs.getInt("cno");
+                String cname = rs.getString("cname");
+                boolean isBackup2 = rs.getBoolean("isbackup");
+                String md5 = rs.getString("md5");
+                int ono = rs.getInt("ono");
+                codeList.add(new Code(cno, cname, isBackup2, md5, ono));
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException se) {
+            se.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return codeList;
+    }
+
+    public int updateOrderisReleased(DeployOrder order) {
+        String SQL;
+        PreparedStatement pst;
+        Connection dbconn = this.connectDB();
+        SQL = "update `codedeployment`.`Orders`  set IsReleased=true where ONO=?;";
+
+        //先插订单
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, order.getOno());
+            pst.executeUpdate();
+            pst.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+    }
+
+    public int updateCodeisBackup(int cno) {
+        String SQL;
+        PreparedStatement pst;
+        Connection dbconn = this.connectDB();
+        DBOperationUtil dbo=new DBOperationUtil();
+        List<Code> codeList=new ArrayList<>();
+        codeList=dbo.queryCode(cno,"",null,"",-1);
+        SQL = "update `codedeployment`.`Codes`  set IsBackup=true where CNO=?;";
+
+        //先插订单
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, cno);
+            pst.executeUpdate();
+            pst.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+    }
+
+    public int updateCodeisNotBackup(int cno) {
+        String SQL;
+        PreparedStatement pst;
+        Connection dbconn = this.connectDB();
+        DBOperationUtil dbo=new DBOperationUtil();
+        List<Code> codeList=new ArrayList<>();
+        codeList=dbo.queryCode(cno,"",null,"",-1);
+        SQL = "update `codedeployment`.`Codes`  set IsBackup=false where CNO=?;";
+
+        //先插订单
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, cno);
+            pst.executeUpdate();
+            pst.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+    }
+
+
+
+
+}

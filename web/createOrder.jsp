@@ -9,10 +9,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <link href="css/bootstrap.css" rel="stylesheet">
+<link href=" css/bootstrapValidator.css" rel="stylesheet">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/popper.js"></script>
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/bootstrap.js"></script>
+<script src="js/bootstrapValidator.js"></script>
 <body>
 <%
 List<Host> hostList=(List<Host>)session.getAttribute("hostList");
@@ -21,7 +23,7 @@ int tid=(int)request.getAttribute("tid");
 %>
 
 <main>
-    <form role="form" action="order_create.action" id="OrdercreateForm">
+    <form class="form-signin required-validate" action="order_create.action" id="OrdercreateForm">
         <fieldset class="form-group">
             <legend class="bg-info text-light">订单创建</legend>
             <div class="form-group row">
@@ -43,7 +45,7 @@ int tid=(int)request.getAttribute("tid");
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="order_name">订单名称： *</label>
 
                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                    <input name="oname" class="form-control" id="order_name" type="text" placeholder="example:部署订单"/>
+                    <input name="oname" class="form-control" id="order_name" type="text" placeholder="example:部署订单" data-bv-notempty/>
                 </div>
             </div>
             <%--<div class="form-group row">--%>
@@ -89,7 +91,7 @@ int tid=(int)request.getAttribute("tid");
             <div class="form-group row">
                 <label class="col-lg-1 col-md-1 col-xs-1 col-sm-1 col-form-label" for="File_list" >文件清单： *</label>
                 <div class="col-5">
-                    <textarea name="filenames" id="File_list" class="form-control" rows="6"></textarea>
+                    <textarea name="filenames" id="File_list" class="form-control" rows="6" data-bv-notempty></textarea>
                     <small id="FileHelp" class="form-text text-danger col-form-label">注意：文件清单贴相对于基准路径的相对路径，并且文件清单前不需要加“/”</small>
                 </div>
                 <div>
@@ -116,8 +118,8 @@ int tid=(int)request.getAttribute("tid");
             </div>--%>
             <div class="form-group row">
                 <div class="col-4">
-                    <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#confirm_dialog">确定</button>
-
+                   <%--<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#confirm_dialog">确定</button>--%>
+                    <button type="submit" class="btn btn-primary">Sign up</button>
                 </div>
                 <div class="col-4">
                     <button type="button" class="btn btn-warning btn-block" data-dismiss="modal">取消</button>
@@ -149,6 +151,33 @@ int tid=(int)request.getAttribute("tid");
     </div>
 </div>
 <script type="text/javascript">
+    $(function () {
+    $(form).bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphiicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            filenames: {
+                message: '文件名验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '文件名不能为空'
+                    }
+                }
+            },
+            oname: {
+                validators: {
+                    notEmpty: {
+                        message: '订单名称不能为空'
+                    }
+                }
+            }
+        }
+    });
+});
     function refresh(tid){
         $.ajax({
             url:"order_refresh.action",
@@ -162,4 +191,6 @@ int tid=(int)request.getAttribute("tid");
     $("#_confirm").click(function(){
             document.getElementById("OrdercreateForm").submit();
     })
+
+
 </script>

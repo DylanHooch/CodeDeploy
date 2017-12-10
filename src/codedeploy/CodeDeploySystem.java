@@ -78,11 +78,12 @@ public class CodeDeploySystem {
         //id 发布没 /没 修改 修改发布状态、备份状态
         return Constants.SUCCESS;
     }
+
     public static int rollBackOrder(int id){
         DBOperationUtil dbo=new DBOperationUtil();
         FetchFileUtil ffu=new FetchFileUtil();
-        List<DeployOrder> orderlist=dbo.queryOrderByID(id);
-//        List<DeployOrder>orderlist=dbo.queryOrder(0);//拿到所有order
+        List<DeployOrder> orderlist=dbo.queryOrderByID(id);//拿到所有order
+//        List<DeployOrder>orderlist=dbo.queryOrder(0);
         int i;
 //        for(i=0;i<orderlist.size();i++)
 //        {
@@ -95,24 +96,28 @@ public class CodeDeploySystem {
 //        }
 //
 //        判断order能不能回滚，如果最新的order的id不等于id则返回-1
-        List<Integer> codeIDList=new ArrayList<>();
-        for(i=0;i<orderlist.size();i++) {
-           codeIDList = orderlist.get(i).getCodeIDList(); //拿到order对应的codeIDList
-        }
+       // List<Integer> codeIDList=new ArrayList<>();
         List<Code> codeList=new ArrayList<>();
-        for(i=0;i<codeIDList.size();i++) {
-            codeList.addAll(dbo.queryCode(codeIDList.get(i),"", false, "", id));
-            dbo.updateCodeBackupStatus(codeIDList.get(i));//修改数据库备份状态
-        }//拿到order对应的codeList
-        List<Host> hosts=orderlist.get(i).getTargetGroup().getHosts();
-        //把备份直接传到订单对应的组下的所有主机
-        for(i=0;i<codeList.size();i++)
-        {
-            Code code=codeList.get(i);
-            for(int j=0;j<hosts.size();j++){
-                //ffu.sendFile(codeList.get(i).getFilePath(),hosts.get(j),"1234",code.getFilePath()+code.getFilename());
-            }
+        for(i=0;i<orderlist.size();i++) {
+           int orderID = orderlist.get(i).getOno(); //拿到order对应的codeIDList
+            List<Code> tempCodelist =new ArrayList<>();
+                    tempCodelist= dbo.queryCode(-1,"",null,"",orderID); //拿到order对应的codeIDList
+            codeList.addAll(tempCodelist);
         }
+
+        for(i=0;i<codeList.size();i++) {
+            //codeList.addAll(dbo.queryCode(codeIDList.get(i),"", null, "", id));
+            dbo.updateCodeisNotBackup(codeList.get(i).getCno());//修改数据库备份状态
+        }//拿到order对应的codeList
+//        List<Host> hosts=orderlist.get(i).getTargetGroup().getHosts();
+//        //把备份直接传到订单对应的组下的所有主机
+//        for(i=0;i<codeList.size();i++)
+//        {
+//            Code code=codeList.get(i);
+//            for(int j=0;j<hosts.size();j++){
+//                //ffu.sendFile(codeList.get(i).getFilePath(),hosts.get(j),"1234",code.getFilePath()+code.getFilename());
+//            }
+//        }
 
         return Constants.SUCCESS;
     }
