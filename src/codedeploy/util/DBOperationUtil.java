@@ -848,7 +848,7 @@ public class DBOperationUtil {
 //                pst.executeUpdate();
 //                pst.close();
 
-                CallableStatement cstmt=connectDB().prepareCall("{call insertCode(?,?,?,?)}");
+                CallableStatement cstmt=connectDB().prepareCall("{call codedeployment.insertCode(?,?,?,?)}");
                 cstmt.setString(1,comp.getFilename());
                 if(comp.isBackup())
                     cstmt.setInt(2,1);

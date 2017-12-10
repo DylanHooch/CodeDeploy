@@ -95,10 +95,25 @@ public class OrderAction extends ActionSupport{
             return ERROR;
         order=new DeployOrder(0,oname,date,tHost,pHosts,pathlist,false);
         dbo.insertOrder(order);
-
+        List<Code> codes=new ArrayList<>();
+        for(String s:pathlist){
+            codes.add(new Code(-1,s,false,"",ono));
+        }
+        dbo.insertCode(codes);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
         return SUCCESS;
+    }
+    public String refreshOrder() throws Exception{
+        dbo=new DBOperationUtil();
+        HttpServletRequest request= ServletActionContext.getRequest();
+        request.setCharacterEncoding("utf-8");
+        List<DeployOrder> orders;
+
+        orders=dbo.queryOrder(0);
+        request.setAttribute("allorder",orders);
+
+        return "refreshorder";
     }
     //request --> ono
     //request <-- 删除后的 all orders
@@ -120,7 +135,13 @@ public class OrderAction extends ActionSupport{
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
         String name=request.getParameter("order_name");
-        List<DeployOrder> orders=dbo.queryOrderByName(name);
+        List<DeployOrder> orders;
+        if(name.equals("allorder")){
+               orders=dbo.queryOrder(0);
+        }
+        else {
+            orders = dbo.queryOrderByName(name);
+        }
         request.setAttribute("allorder",orders);
 
         return SUCCESS;

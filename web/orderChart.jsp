@@ -51,7 +51,7 @@
         <button class="btn btn-outline-secondary" type="button" onclick="confirm1(1)">发布</button>
         <button id="rb" class="btn btn-outline-secondary" type="button" onclick="confirm1(2)">回滚</button>
         <button class="btn btn-outline-secondary" type="button" onclick="confirm1(3)">删除</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="alert('刷新')">刷新</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="refreshOrder()">刷新</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
     </div>
     <p></p>
@@ -167,6 +167,19 @@
             }
         }
     }
+    function refreshOrder(){
+
+            $.ajax({
+                url:"/order_refreshOrder.action",
+                type:"get",
+                success:function(data){
+                    //$("#rb_state").text("已回滚");
+                    //find(document.getElementsByName("idd").text()));
+                    $("#fullorderlist").html(data);
+
+                }
+            });
+    }
     function rollback(id)
     {
         $.ajax({
@@ -198,7 +211,7 @@
             type:"get",
             success:function(){
                 //$("#rb_state").text("已回滚");
-                alert("6666")
+
             }
         });
     }
