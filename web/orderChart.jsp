@@ -50,7 +50,7 @@
     <div >
         <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#createOrder">增加</button>
         <button class="btn btn-outline-secondary" type="button" onclick="confirm1(1)">发布</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="confirm1(2)">回滚</button>
+        <button id="rb" class="btn btn-outline-secondary" type="button" onclick="confirm1(2)">回滚</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('删除')">删除</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('刷新')">刷新</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
@@ -71,9 +71,9 @@
         <% if(orders!=null){
             int row=1;
             for(DeployOrder order : orders ) {%>
-        <tr >
+        <tr name="777">
             <td><input type="radio" name="selecttr" value="<%=row++ %>" check="checked"/></td>
-            <td  style="display: none"><%=order.getOno()%></td>
+            <td name="idd" style="display: none"><%=order.getOno()%></td>
             <td><%= order.getName()%></td>
             <td >
                 <%if(true) {%>

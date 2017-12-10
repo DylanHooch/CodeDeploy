@@ -174,8 +174,12 @@ function Delete(id,type) {
                 async: false,
                 success: function (data) {
 
-                    confirm(data);
-                    location.reload();
+                    reslut=confirm(data);
+                    if(reslut==true)
+                        location.reload();
+                    else
+                        insert(ID,type);
+
 
                 }
             });
