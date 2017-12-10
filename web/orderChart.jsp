@@ -71,9 +71,9 @@
         <% if(orders!=null){
             int row=1;
             for(DeployOrder order : orders ) {%>
-        <tr name="777">
+        <tr >
             <td><input type="radio" name="selecttr" value="<%=row++ %>" check="checked"/></td>
-            <td name="idd" style="display: none"><%=order.getOno()%></td>
+            <td  style="display: none"><%=order.getOno()%></td>
             <td><%= order.getName()%></td>
             <td >
                 <%if(true) {%>
@@ -81,7 +81,7 @@
                 <%}else {%>
                 未备份
                 <%}%>
-            </td>
+            </span></td>
             <td>
                 <%if(order.isReleased()==true) {%>
                 已发布
@@ -91,6 +91,7 @@
             </td>
 
             <td ><%= order.getDate()%></td>
+            <td  style="display: none"><%=order.isReleased()%></td>
         </tr>
         <%}}%>
         </tbody>
@@ -149,10 +150,14 @@
     }
     function confirm1(num){
         var id=table1.rows[$("input[name='selecttr']:checked").val()].cells[1].innerHTML;
+        var isrelease=table1.rows[$("input[name='selecttr']:checked").val()].cells[6].innerHTML;
+
+
         if(num==1){
             result = confirm("确定发布该订单吗？");
             if (result == true) {
-                release(id);
+                if(isrelease==true) release(id);
+                else alert("该订单已发布!")
             }
         }
         else if(num==2) {
@@ -180,8 +185,9 @@
         $.ajax({
             url:"/orderrelease?id="+id,
             type:"get",
-            success:function(){
+            success:function(data){
                 //$("#rb_state").text("已回滚");
+                $("#fullorderlist").html(data);
                 alert("6666")
             }
         });
