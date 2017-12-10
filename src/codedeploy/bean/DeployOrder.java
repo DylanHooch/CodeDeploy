@@ -14,8 +14,9 @@ public class DeployOrder {
     private List<String> codePathList;
     private List<Integer> codeIDList;
     private boolean isReleased;
+    private int isRollBack;
     public DeployOrder(){}
-    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,boolean isReleased)
+    public DeployOrder(int ono, String name, Date date, TestHost targetTHost, PHostGroup pHostGroup, List<String> codePathList, boolean isRelease)
     {
         this.name=name;
         this.ono=ono;
@@ -25,7 +26,7 @@ public class DeployOrder {
         this.codePathList=codePathList;
         this.isReleased=isReleased;
     }
-    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,List<Integer> codeIDList,boolean isReleased)
+    public DeployOrder(int ono, String name, Date date, TestHost targetTHost, PHostGroup pHostGroup, List<String> codePathList, List<Integer> codeIDList, boolean isReleased)
     {
         this.ono=ono;
         this.codeIDList=codeIDList;
@@ -36,7 +37,7 @@ public class DeployOrder {
         this.isReleased=isReleased;
         this.name=name;
     }
-    public DeployOrder(int ono, String name,Date date, TestHost targetTHost, PHostGroup pHostGroup,List<String> codePathList,List<Integer> codeIDList,boolean isReleased,int lid)
+    public DeployOrder(int ono, String name, Date date, TestHost targetTHost, PHostGroup pHostGroup, List<String> codePathList, List<Integer> codeIDList, boolean isReleased, int lid,int isRollBack)
     {
         this.ono=ono;
         this.codeIDList=codeIDList;
@@ -45,6 +46,7 @@ public class DeployOrder {
         this.targetGroup=pHostGroup;
         this.codePathList=codePathList;
         this.isReleased=isReleased;
+        this.isRollBack=isRollBack;
         this.name=name;
         this.lid=lid;
     }
@@ -121,4 +123,6 @@ public class DeployOrder {
     public void setReleased(boolean released) {
         isReleased = released;
     }
+
+    public int IsRollBack() {return isRollBack;}
 }

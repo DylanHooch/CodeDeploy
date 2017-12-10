@@ -64,6 +64,7 @@
             <th>订单名称</th>
             <th>目标机备份</th>
             <th>发布状态</th>
+            <th>备份状态</th>
             <th>订单创建日期</th>
         </tr>
         </thead>
@@ -76,9 +77,9 @@
             <td name="idd" style="display: none"><%=order.getOno()%></td>
             <td><%= order.getName()%></td>
             <td >
-                <%if(true) {%>
+                <%if((order.isReleased()==true)) {%>
                 已备份
-                <%}else {%>
+                <%}if(order.isReleased()==false) {%>
                 未备份
                 <%}%>
             </td>
@@ -87,6 +88,13 @@
                 已发布
                 <%}else {%>
                 未发布
+                <%}%>
+            </td>
+            <td>
+                <%if(order.IsRollBack()==0) {%>
+                未回滚
+                <%}if(order.IsRollBack()==1) {%>
+                已回滚
                 <%}%>
             </td>
 

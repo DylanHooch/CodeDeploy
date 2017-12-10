@@ -60,6 +60,7 @@ public class DBOperationUtil {
                     TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                     PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                     String name = rs.getString("OName");
+                    int isRollBack=rs.getInt("IsRollBack");
                     List<Code> codeList = queryCode(-1, "", false, "", ono);
                     List<String> codePathList = new ArrayList<>(codeList.size());
                     List<Integer> codeIDList = new ArrayList<>(codeList.size());
@@ -71,7 +72,7 @@ public class DBOperationUtil {
                     boolean isReleased=false;
                     if(isReleasedInt==1)
                         isReleased=true;
-                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid()));
+                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid(),isRollBack));
 
                 }
                 dbconn.close();
@@ -96,6 +97,7 @@ public class DBOperationUtil {
                     TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                     PHostGroup targetGroup = (PHostGroup) queryGroup(rs.getInt("targetGroup"));
                     String name = rs.getString("OName");
+                    int isRollBack=rs.getInt("IsRollBack");
                     List<Code> codeList = queryCode(-1, "", false, "", ono);
                     List<String> codePathList = new ArrayList<>(codeList.size());
                     List<Integer> codeIDList = new ArrayList<>(codeList.size());
@@ -104,7 +106,7 @@ public class DBOperationUtil {
                         codeIDList.add(codeList.get(i).getCno());
                     }
                     boolean isReleased = rs.getBoolean("isReleased");
-                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid()));
+                    dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,CodeDeploySystem.getLid(),isRollBack));
                 }
 
             } catch (SQLException e) {
@@ -135,6 +137,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
+                int isRollBack=rs.getInt("IsRollBack");
                 List<Code> codeList = queryCode(-1, "", true, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
@@ -143,7 +146,7 @@ public class DBOperationUtil {
                     codeIDList.add(codeList.get(i).getCno());
                 }
                 boolean isReleased = rs.getBoolean("isReleased");
-                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid));
+                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid,isRollBack));
             }
 
         } catch (SQLException e) {
@@ -171,6 +174,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
+                int isRollBack=rs.getInt("IsRollBack");
                 List<Code> codeList = queryCode(-1, "", false, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
@@ -180,7 +184,7 @@ public class DBOperationUtil {
                 }
                 String name = rs.getString("oname");
                 boolean isReleased = rs.getBoolean("isReleased");
-                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid));
+                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid,isRollBack));
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -194,7 +198,7 @@ public class DBOperationUtil {
         String SQL;
         PreparedStatement pst;
         Connection dbconn = this.connectDB();
-        SQL = "insert into`codedeployment`.`Orders` (ODate,TargetGroup,TargetTHost,LID,IsReleased,OName)  values(?, ?, ?,?,?,?);";
+        SQL = "insert into`codedeployment`.`Orders` (ODate,TargetGroup,TargetTHost,LID,IsReleased,OName,IsRollBack)  values(?, ?, ?,?,?,?,?);";
 
 
         try {
@@ -209,6 +213,7 @@ public class DBOperationUtil {
             pst.setInt(4, CodeDeploySystem.getLid());
             pst.setBoolean(5, order.isReleased());
             pst.setString(6,order.getName());
+            pst.setInt(7,0);
             pst.executeUpdate();
             pst.close();
         } catch (SQLException e) {
@@ -987,6 +992,28 @@ public class DBOperationUtil {
         PreparedStatement pst;
         Connection dbconn = this.connectDB();
         SQL = "update `codedeployment`.`Orders`  set IsReleased=true where ONO=?;";
+
+        //先插订单
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1, order.getOno());
+            pst.executeUpdate();
+            pst.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        return Constants.SUCCESS;
+        //return Constants.FAILURE;
+    }
+
+    public int updateOrderisRollback(DeployOrder order) {
+        String SQL;
+        PreparedStatement pst;
+        Connection dbconn = this.connectDB();
+        SQL = "update `codedeployment`.`Orders`  set IsRollBack=1 where ONO=?;";
 
         //先插订单
         try {

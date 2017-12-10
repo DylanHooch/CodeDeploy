@@ -118,8 +118,7 @@ int tid=(int)request.getAttribute("tid");
             </div>--%>
             <div class="form-group row">
                 <div class="col-4">
-                   <%--<button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#confirm_dialog">确定</button>--%>
-                    <button type="submit" class="btn btn-primary">Sign up</button>
+                   <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#confirm_dialog">确定</button>
                 </div>
                 <div class="col-4">
                     <button type="button" class="btn btn-warning btn-block" data-dismiss="modal">取消</button>

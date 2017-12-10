@@ -100,6 +100,7 @@ public class CodeDeploySystem {
         List<Code> codeList=new ArrayList<>();
         for(i=0;i<orderlist.size();i++) {
            int orderID = orderlist.get(i).getOno(); //拿到order对应的codeIDList
+            dbo.updateOrderisRollback(orderlist.get(i));//发布状态
             List<Code> tempCodelist =new ArrayList<>();
                     tempCodelist= dbo.queryCode(-1,"",null,"",orderID); //拿到order对应的codeIDList
             codeList.addAll(tempCodelist);
