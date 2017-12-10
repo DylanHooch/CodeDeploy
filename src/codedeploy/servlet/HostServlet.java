@@ -29,7 +29,6 @@ public class HostServlet extends HttpServlet {
         request.setCharacterEncoding("utf-8");
         String id = request.getParameter("id");
         String type = request.getParameter("type");
-        System.out.println(type);
         int ID= Integer.parseInt(id);
         int Type=Integer.parseInt(type);
         List<Host> hostlist;

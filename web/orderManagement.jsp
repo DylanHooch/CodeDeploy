@@ -14,7 +14,7 @@
     <title>订单管理详情页</title>
 </head>
 <body>
-<div style="width:800px;height:50px;color:black">
+<div style="width:800px;height:60px;color:black">
     <H1> </H1>
 </div>
 <div style="width:1000px;height:1000px;">

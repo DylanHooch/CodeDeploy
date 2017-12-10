@@ -10,7 +10,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-    <title>智能部署上线系统</title>
+    <title>主机管理</title>
     <s:head theme="xhtml"/>
     <sx:head parseContent="true"/>
     <!-- include compliled bootstrap plugins-->
@@ -21,8 +21,8 @@
 </head>
 <body>
 <s:include value="nav.jsp"></s:include>
-<div style="width:800px;height:100px">
-    <H1>智能部署上线系统</H1>
+<div style="width:800px;height:30px">
+    <H1> </H1>
 </div>
 <div style="width:800px;height:1000px;">
     <div style="width:300px;height:1000px;float:left;">

@@ -1,17 +1,12 @@
 package codedeploy.action;
 
-import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
-import codedeploy.util.OrderUtil;
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,17 +87,33 @@ public class OrderAction extends ActionSupport{
         for(int i=0;i<filelist.length;i++){
             pathlist.add(basepath+"/"+filelist[i]);
         }
-
         Date date=new Date();
         List<Host> tHosts=dbo.queryHost(tid, Constants.TESTHOST);
         TestHost tHost=(TestHost)tHosts.get(0);
         PHostGroup pHosts=dbo.queryGroup(gid);
-        order=new DeployOrder(789,oname,date,tHost,pHosts,pathlist,false);
+        if(pHosts==null)
+            return ERROR;
+        order=new DeployOrder(0,oname,date,tHost,pHosts,pathlist,false);
         dbo.insertOrder(order);
-
+        List<Code> codes=new ArrayList<>();
+        for(String s:pathlist){
+            codes.add(new Code(-1,s,false,"",ono));
+        }
+        dbo.insertCode(codes);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
         return SUCCESS;
+    }
+    public String refreshOrder() throws Exception{
+        dbo=new DBOperationUtil();
+        HttpServletRequest request= ServletActionContext.getRequest();
+        request.setCharacterEncoding("utf-8");
+        List<DeployOrder> orders;
+
+        orders=dbo.queryOrder(0);
+        request.setAttribute("allorder",orders);
+
+        return "refreshorder";
     }
     //request --> ono
     //request <-- 删除后的 all orders
@@ -110,7 +121,7 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        int ono=Integer.parseInt(request.getParameter("ono"));
+        int ono=Integer.parseInt(request.getParameter("id"));
         dbo.deleteOrder(ono);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
@@ -123,8 +134,14 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        String name=request.getParameter("oname");
-        List<DeployOrder> orders=dbo.queryOrderByName(oname);
+        String name=request.getParameter("order_name");
+        List<DeployOrder> orders;
+        if(name.equals("allorder")){
+               orders=dbo.queryOrder(0);
+        }
+        else {
+            orders = dbo.queryOrderByName(name);
+        }
         request.setAttribute("allorder",orders);
 
         return SUCCESS;
@@ -140,7 +157,7 @@ public class OrderAction extends ActionSupport{
         List<PHostGroup> groupList=(List<PHostGroup>)session.get("groupList");
         if(groupList==null)
         {
-            groupList=dbo.queryGroup();
+            groupList=dbo.queryGroup(false);
             session.put("groupList",groupList);
         }
         List<Host> hostList=(List<Host>)session.get("hostList");

@@ -163,6 +163,8 @@ function Delete(id,type) {
         }
         else//input something and clikc ok
         {
+            <%
+            %>
             $.ajax({
                 url: "/hostins?id=" + ID+ "&Address="+ result+"&type="+type,
                 type: 'get', //数据发送方
@@ -170,10 +172,13 @@ function Delete(id,type) {
                     alert("not lived!");
                 },
                 async: false,
-                success: function (html) {
+                success: function (data) {
 
-                    reslut = confirm("数据增加成功");
-                    location.reload();
+                    reslut=confirm(data);
+                    if(reslut==true)
+                        location.reload();
+                    else
+                        insert(ID,type);
 
 
                 }

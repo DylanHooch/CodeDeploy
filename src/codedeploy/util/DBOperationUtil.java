@@ -3,8 +3,6 @@ package codedeploy.util;
 
 import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ public class DBOperationUtil {
                     int ono = rs.getInt("ONO");
                     java.util.Date date = rs.getTimestamp("ODate");
                     TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
-                    PHostGroup targetGroup = (PHostGroup) queryGroup(rs.getInt("targetGroup"));
+                    PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                     String name = rs.getString("OName");
                     List<Code> codeList = queryCode(-1, "", false, "", ono);
                     List<String> codePathList = new ArrayList<>(codeList.size());
@@ -137,7 +135,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
-                List<Code> codeList = queryCode(-1, null, false, null, ono);
+                List<Code> codeList = queryCode(-1, "", true, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
                 for (int i = 0; i < codePathList.size(); i++) {
@@ -155,7 +153,42 @@ public class DBOperationUtil {
         }
         return dporders;
     }
-
+    public List<DeployOrder> queryOrderByID(int id)
+    {
+        String SQL;
+        Connection dbconn = this.connectDB();
+        ResultSet rs;
+        PreparedStatement pst;
+        List<DeployOrder> dporders = new ArrayList();
+        SQL = "SELECT * FROM `codedeployment`.`Orders` where `ONO`=? ORDER BY `odate` DESC;";
+        try {
+            pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pst.setInt(1,id);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                int ono = rs.getInt("ONO");
+                java.util.Date date = rs.getTimestamp("ODate");
+                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
+                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
+                int lid=rs.getInt("LID");
+                List<Code> codeList = queryCode(-1, null, false, null, ono);
+                List<String> codePathList = new ArrayList<>(codeList.size());
+                List<Integer> codeIDList = new ArrayList<>(codeList.size());
+                for (int i = 0; i < codePathList.size(); i++) {
+                    codePathList.add(codeList.get(i).getFilename());
+                    codeIDList.add(codeList.get(i).getCno());
+                }
+                String name = rs.getString("oname");
+                boolean isReleased = rs.getBoolean("isReleased");
+                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid));
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+        return dporders;
+    }
 
     public int insertOrder(DeployOrder order) {/////LID
         String SQL;
@@ -444,7 +477,7 @@ public class DBOperationUtil {
         else return null;
     }
     //一次查询所有的生产主机组
-    public List<PHostGroup> queryGroup() {
+    public List<PHostGroup> queryGroup(boolean detail) {
 
         DBOperationUtil dbo = new DBOperationUtil();
         Connection dbConn = dbo.connectDB();
@@ -470,18 +503,19 @@ public class DBOperationUtil {
                         tid = rs.getInt("TID");
                         groups.add(new PHostGroup(gid,gname,tid));
                     }
-                    for(int i=0;i<groups.size();i++) {
-                        querysql = "select * from `codedeployment`.`producthost` where GID =" + groups.get(i).getId();
-                        ResultSet rs1 = stat.executeQuery(querysql);
-                        List<Host> hosts = new ArrayList<>();
-                        while (rs1.next())
-                        {
-                            int id = rs1.getInt("PID");
-                            String address = rs1.getString("Address");
-                            hosts.add(new TestHost(id, address));
-
+                    if(detail){
+                        for(int i=0;i<groups.size();i++) {
+                            querysql = "select * from `codedeployment`.`producthost` where GID =" + groups.get(i).getId();
+                            ResultSet rs1 = stat.executeQuery(querysql);
+                            List<Host> hosts = new ArrayList<>();
+                            while (rs1.next())
+                            {
+                                int id = rs1.getInt("PID");
+                                String address = rs1.getString("Address");
+                                hosts.add(new TestHost(id, address));
+                            }
+                            groups.get(i).setHosts(hosts);
                         }
-                        groups.get(i).setHosts(hosts);
                     }
                     stat.close();
                     return groups;
@@ -505,15 +539,18 @@ public class DBOperationUtil {
             prstmt = connectDB().prepareStatement(sql);
             prstmt.setInt(1, GID);
             ResultSet rs = prstmt.executeQuery();
-            rs.next();
-            PHostGroup group = new PHostGroup();
-            group.setId(GID);
-            //group.setHosts(queryHost(GID, Constants.PHOSTGROUP));
-            group.setName(rs.getString("GName"));
-            group.setTID(rs.getInt("TID"));
-            rs.close();
-            prstmt.close();
-            return group;
+            if(rs.next())
+            {
+                PHostGroup group = new PHostGroup();
+                group.setId(GID);
+                //group.setHosts(queryHost(GID, Constants.PHOSTGROUP));
+                group.setName(rs.getString("GName"));
+                group.setTID(rs.getInt("TID"));
+                rs.close();
+                prstmt.close();
+                return group;
+            }
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -811,7 +848,7 @@ public class DBOperationUtil {
 //                pst.executeUpdate();
 //                pst.close();
 
-                CallableStatement cstmt=connectDB().prepareCall("{call insertCode(?,?,?,?)}");
+                CallableStatement cstmt=connectDB().prepareCall("{call codedeployment.insertCode(?,?,?,?)}");
                 cstmt.setString(1,comp.getFilename());
                 if(comp.isBackup())
                     cstmt.setInt(2,1);

@@ -44,7 +44,7 @@ public class CodeDeploySystem {
     public static void setLid(int lid){CodeDeploySystem.lid=lid;}
     public static String getLocalAddress(){return localAddress;}
     public static void setLocalAddress(String address){localAddress=address;}
-    public int CreateOrder(DeployOrder order)
+    public int createOrder(DeployOrder order)
     {
         FetchFileUtil ffu=new FetchFileUtil();
         List<String> fpaths=order.getCodePathList();
@@ -74,6 +74,7 @@ public class CodeDeploySystem {
                 break;
             }
         }
+
         //id 发布没 /没 修改 修改发布状态、备份状态
         return Constants.SUCCESS;
     }
