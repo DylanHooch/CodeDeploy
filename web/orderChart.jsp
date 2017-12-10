@@ -153,10 +153,10 @@
 
 
         if(num==1){
-            result = confirm("确定发布该订单吗？");
+            result = confirm("确定发布该订单吗？"+isrelease);
             if (result == true) {
-                if(isrelease==true) release(id);
-                else alert("该订单已发布!")
+                if(isrelease=="false") release(id);
+                else alert("该订单已发布!");
             }
         }
         else if(num==2) {
@@ -166,8 +166,8 @@
             }
         }
         else if(num==3){
-            reslut=confirm("确认删除订单吗？");
-            if(reslut==true){
+            result=confirm("确认删除订单吗？");
+            if(result==true){
                 deleteOrder(id);
             }
         }
@@ -201,7 +201,7 @@
     function release(id)
     {
         $.ajax({
-            url:"/orderrelease?id="+id,
+            url:"/order_release.action?id="+id,
             type:"get",
             success:function(data){
                 //$("#rb_state").text("已回滚");

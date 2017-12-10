@@ -1,5 +1,6 @@
 package codedeploy.action;
 
+import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -7,6 +8,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -179,6 +181,17 @@ public class OrderAction extends ActionSupport{
 
         //request.put("tid",tid);
         return "refresh";
+    }
+    public String release() throws Exception{
+        dbo=new DBOperationUtil();
+        HttpServletRequest request= ServletActionContext.getRequest();
+        request.setCharacterEncoding("utf-8");
+        int id =Integer.parseInt(request.getParameter("id"));
+        CodeDeploySystem.releaseOrder(id);
+        System.out.println("ReleaseAction2333333");
+        List<DeployOrder> orderlist=dbo.queryOrder(0);
+        request.setAttribute("allorder",orderlist);
+        return "release";
     }
 }
 

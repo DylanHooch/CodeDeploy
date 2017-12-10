@@ -24,6 +24,7 @@
             <result name="success">/orderManagement.jsp</result>
             <result name="refreshorder">/orderChart.jsp</result>
             <result name="refresh">/createOrder.jsp</result>
+            <result name="release">/orderChart.jsp</result>
         </action>
     </package>
 </struts>
