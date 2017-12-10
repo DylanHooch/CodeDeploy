@@ -29,7 +29,7 @@
         <p></p>
     </div>
 
-    <form class="form-inline" role="form">
+    <form class="form-inline" action="order_select.action" role="form">
         <div class="form-group">
             订单名称:&nbsp &nbsp
 
@@ -42,8 +42,7 @@
                 <option value="no" style=:display:none">否</option>
             </select>
 
-            <button class="btn btn-outline-secondary" style="margin-right:10px" data-toggle="modal" data-target="#exampleModal">查询</button>
-            <button class="btn btn-outline-secondary" type="button" onclick="alert('重置')">重置</button>
+            <button class="btn btn-outline-secondary" style="margin-right:10px" >查询</button>
         </div>
     </form>
 
@@ -51,8 +50,8 @@
         <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#createOrder">增加</button>
         <button class="btn btn-outline-secondary" type="button" onclick="confirm1(1)">发布</button>
         <button id="rb" class="btn btn-outline-secondary" type="button" onclick="confirm1(2)">回滚</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="alert('删除')">删除</button>
-        <button class="btn btn-outline-secondary" type="button" onclick="alert('刷新')">刷新</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="confirm1(3)">删除</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="refreshOrder()">刷新</button>
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
     </div>
     <p></p>
@@ -71,9 +70,9 @@
         <% if(orders!=null){
             int row=1;
             for(DeployOrder order : orders ) {%>
-        <tr name="777">
+        <tr >
             <td><input type="radio" name="selecttr" value="<%=row++ %>" check="checked"/></td>
-            <td name="idd" style="display: none"><%=order.getOno()%></td>
+            <td  style="display: none"><%=order.getOno()%></td>
             <td><%= order.getName()%></td>
             <td >
                 <%if(true) {%>
@@ -81,7 +80,7 @@
                 <%}else {%>
                 未备份
                 <%}%>
-            </td>
+            </span></td>
             <td>
                 <%if(order.isReleased()==true) {%>
                 已发布
@@ -91,6 +90,7 @@
             </td>
 
             <td ><%= order.getDate()%></td>
+            <td  style="display: none"><%=order.isReleased()%></td>
         </tr>
         <%}}%>
         </tbody>
@@ -149,10 +149,14 @@
     }
     function confirm1(num){
         var id=table1.rows[$("input[name='selecttr']:checked").val()].cells[1].innerHTML;
+        var isrelease=table1.rows[$("input[name='selecttr']:checked").val()].cells[6].innerHTML;
+
+
         if(num==1){
-            result = confirm("确定发布该订单吗？");
+            result = confirm("确定发布该订单吗？"+isrelease);
             if (result == true) {
-                release(id);
+                if(isrelease=="false") release(id);
+                else alert("该订单已发布!");
             }
         }
         else if(num==2) {
@@ -161,6 +165,25 @@
                 rollback(id);
             }
         }
+        else if(num==3){
+            result=confirm("确认删除订单吗？");
+            if(result==true){
+                deleteOrder(id);
+            }
+        }
+    }
+    function refreshOrder(){
+
+            $.ajax({
+                url:"/order_refreshOrder.action",
+                type:"get",
+                success:function(data){
+                    //$("#rb_state").text("已回滚");
+                    //find(document.getElementsByName("idd").text()));
+                    $("#fullorderlist").html(data);
+
+                }
+            });
     }
     function rollback(id)
     {
@@ -178,11 +201,23 @@
     function release(id)
     {
         $.ajax({
-            url:"/orderrelease?id="+id,
+            url:"/order_release.action?id="+id,
+            type:"get",
+            success:function(data){
+                //$("#rb_state").text("已回滚");
+                $("#fullorderlist").html(data);
+                alert("6666")
+            }
+        });
+    }
+    function deleteOrder(id)
+    {
+        $.ajax({
+            url:"/order_delete.action?id="+id,
             type:"get",
             success:function(){
                 //$("#rb_state").text("已回滚");
-                alert("6666")
+
             }
         });
     }

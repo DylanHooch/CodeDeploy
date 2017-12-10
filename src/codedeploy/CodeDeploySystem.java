@@ -4,6 +4,7 @@ import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
 import codedeploy.util.FetchFileUtil;
 
+import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -66,8 +67,44 @@ public class CodeDeploySystem {
         DBOperationUtil dbo=new DBOperationUtil();
         FetchFileUtil ffu=new FetchFileUtil();
         DeployOrder order=dbo.queryOrderByID(id);
-
-
+        List<Code> codes=dbo.queryCode(-1,"",null,"",id);
+        String tempDir="temp"+File.separator;
+        String[] tmp;
+        String backupDir="backup"+File.separator;
+        List<Host> productHosts=dbo.queryHost(order.getTargetGroup().getId(),Constants.PHOSTGROUP);
+        for(Code code: codes)
+        {
+            tmp=code.getFilename().split(File.separator);
+            String codeName=tmp[tmp.length];
+            String codePath="";
+            for(int i=0;i<tmp.length-1;i++)
+                codePath+=tmp[i];
+            File file=new File(tempDir+codeName);
+            boolean flag=true;
+            if(file.exists())
+            {
+                String md5=ffu.calcMD5(tempDir+codeName);
+                if(md5.equals(code.getMd5()))//没有缓存
+                {
+                    flag=false;
+                }
+            }
+            if(flag)//需要重新抓取代码
+            {
+                String md5;
+                do { ;
+                    ffu.getFile("temp"+File.separator,order.getTargetTHost(),"8889",code.getFilename());
+                    md5=ffu.calcMD5(tempDir+codeName);
+                }while(!md5.equals(code.getMd5()));
+            }
+            //备份
+            for(Host host : productHosts)
+            {
+                ffu.getFile(codePath,host,"8889",backupDir);
+                //代码上线
+                ffu.sendFile(codePath,host,"8889",tempDir+codeName);
+            }
+        }
 
         if(order.isReleased()==false&&order.getOno()==id) {
             dbo.updateOrderisReleased(order);//发布状态

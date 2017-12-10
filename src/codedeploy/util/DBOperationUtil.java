@@ -135,7 +135,7 @@ public class DBOperationUtil {
                 TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
                 PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid=rs.getInt("LID");
-                List<Code> codeList = queryCode(-1, null, false, null, ono);
+                List<Code> codeList = queryCode(-1, "", true, "", ono);
                 List<String> codePathList = new ArrayList<>(codeList.size());
                 List<Integer> codeIDList = new ArrayList<>(codeList.size());
                 for (int i = 0; i < codePathList.size(); i++) {
@@ -167,8 +167,8 @@ public class DBOperationUtil {
             if (rs.next()) {
                 int ono = rs.getInt("ONO");
                 java.util.Date date = rs.getTimestamp("ODate");
-//                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
-//                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
+                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
+                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
                 int lid = rs.getInt("LID");
 //                List<Code> codeList = queryCode(-1, null, false, null, ono);
 //                List<String> codePathList = new ArrayList<>(codeList.size());
@@ -179,7 +179,7 @@ public class DBOperationUtil {
 //                }
                 String name = rs.getString("oname");
                 boolean isReleased = rs.getBoolean("isReleased");
-                dporder = new DeployOrder(ono, name, date, null, null, null, null, isReleased, lid);
+                dporder = new DeployOrder(ono, name, date, testHost, targetGroup, null, null, isReleased, lid);
             }
             return dporder;
         } catch (SQLException e) {
@@ -848,7 +848,7 @@ public class DBOperationUtil {
 //                pst.executeUpdate();
 //                pst.close();
 
-                CallableStatement cstmt=connectDB().prepareCall("{call insertCode(?,?,?,?)}");
+                CallableStatement cstmt=connectDB().prepareCall("{call codedeployment.insertCode(?,?,?,?)}");
                 cstmt.setString(1,comp.getFilename());
                 if(comp.isBackup())
                     cstmt.setInt(2,1);
@@ -907,7 +907,7 @@ public class DBOperationUtil {
 
 
 
-    public List<Code> queryCode(int CNO, String CName, boolean isBackup, String MD5, int ONO) {
+    public List<Code> queryCode(int CNO, String CName, Boolean isBackup, String MD5, int ONO) {
         List<Code> codeList = new ArrayList<Code>();
 
         Connection conn = null;
@@ -915,7 +915,7 @@ public class DBOperationUtil {
         String whereClause = "";
         if (CNO != -1) whereClause += "cno=? and ";
         if (CName.length() != 0) whereClause += "cname=? and ";
-        if (isBackup != false) whereClause += "isBackup=? and ";
+        if (isBackup != null) whereClause += "isBackup=? and ";
         if (MD5.length() != 0) whereClause += "md5=? and ";
         if (ONO != -1) whereClause += "ono=? and ";// and?
         //if (filePath.length() != 0) whereClause += "filepath=? and ";

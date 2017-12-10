@@ -1,5 +1,6 @@
 package codedeploy.action;
 
+import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -95,10 +96,25 @@ public class OrderAction extends ActionSupport{
             return ERROR;
         order=new DeployOrder(0,oname,date,tHost,pHosts,pathlist,false);
         dbo.insertOrder(order);
-
+        List<Code> codes=new ArrayList<>();
+        for(String s:pathlist){
+            codes.add(new Code(-1,s,false,"",ono));
+        }
+        dbo.insertCode(codes);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
         return SUCCESS;
+    }
+    public String refreshOrder() throws Exception{
+        dbo=new DBOperationUtil();
+        HttpServletRequest request= ServletActionContext.getRequest();
+        request.setCharacterEncoding("utf-8");
+        List<DeployOrder> orders;
+
+        orders=dbo.queryOrder(0);
+        request.setAttribute("allorder",orders);
+
+        return "refreshorder";
     }
     //request --> ono
     //request <-- 删除后的 all orders
@@ -106,7 +122,7 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        int ono=Integer.parseInt(request.getParameter("ono"));
+        int ono=Integer.parseInt(request.getParameter("id"));
         dbo.deleteOrder(ono);
         List<DeployOrder> orders=dbo.queryOrder(0);
         request.setAttribute("allorder",orders);
@@ -119,8 +135,14 @@ public class OrderAction extends ActionSupport{
         dbo=new DBOperationUtil();
         HttpServletRequest request= ServletActionContext.getRequest();
         request.setCharacterEncoding("utf-8");
-//        String name=request.getParameter("oname");
-        List<DeployOrder> orders=dbo.queryOrderByName(oname);
+        String name=request.getParameter("order_name");
+        List<DeployOrder> orders;
+        if(name.equals("allorder")){
+               orders=dbo.queryOrder(0);
+        }
+        else {
+            orders = dbo.queryOrderByName(name);
+        }
         request.setAttribute("allorder",orders);
 
         return SUCCESS;
@@ -158,6 +180,17 @@ public class OrderAction extends ActionSupport{
 
         //request.put("tid",tid);
         return "refresh";
+    }
+    public String release() throws Exception{
+        dbo=new DBOperationUtil();
+        HttpServletRequest request= ServletActionContext.getRequest();
+        request.setCharacterEncoding("utf-8");
+        int id =Integer.parseInt(request.getParameter("id"));
+        CodeDeploySystem.releaseOrder(id);
+        System.out.println("ReleaseAction2333333");
+        List<DeployOrder> orderlist=dbo.queryOrder(0);
+        request.setAttribute("allorder",orderlist);
+        return "release";
     }
 }
 
