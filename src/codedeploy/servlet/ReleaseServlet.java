@@ -1,7 +1,6 @@
 package codedeploy.servlet;
 
 import codedeploy.CodeDeploySystem;
-import codedeploy.util.DBOperationUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +12,9 @@ import java.io.IOException;
 
 @WebServlet(name = "ReleaseServlet")
 public class ReleaseServlet extends HttpServlet {
-    DBOperationUtil dbo=new DBOperationUtil();
-    CodeDeploySystem cds=new CodeDeploySystem();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        cds.releaseOrder(id);
+        CodeDeploySystem.releaseOrder(id);
         System.out.println("ReleaseServlet2333333");
     }
 

@@ -65,14 +65,12 @@ public class CodeDeploySystem {
     {
         DBOperationUtil dbo=new DBOperationUtil();
         FetchFileUtil ffu=new FetchFileUtil();
-        List<DeployOrder>orderlist=dbo.queryOrder(0);
-        int i;
-        for(i=0;i<orderlist.size();i++)
-        {
-            if(orderlist.get(i).isReleased()==false&&orderlist.get(i).getOno()==id) {
-                dbo.updateOrderisReleased(orderlist.get(i));//发布状态
-                break;
-            }
+        DeployOrder order=dbo.queryOrderByID(id);
+
+
+
+        if(order.isReleased()==false&&order.getOno()==id) {
+            dbo.updateOrderisReleased(order);//发布状态
         }
 
         //id 发布没 /没 修改 修改发布状态、备份状态

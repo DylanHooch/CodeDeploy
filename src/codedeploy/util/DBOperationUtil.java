@@ -153,41 +153,41 @@ public class DBOperationUtil {
         }
         return dporders;
     }
-    public List<DeployOrder> queryOrderByID(int id)
-    {
+    public DeployOrder queryOrderByID(int id) {
         String SQL;
         Connection dbconn = this.connectDB();
         ResultSet rs;
         PreparedStatement pst;
-        List<DeployOrder> dporders = new ArrayList();
+        DeployOrder dporder=null;
         SQL = "SELECT * FROM `codedeployment`.`Orders` where `ONO`=? ORDER BY `odate` DESC;";
         try {
             pst = dbconn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            pst.setInt(1,id);
+            pst.setInt(1, id);
             rs = pst.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 int ono = rs.getInt("ONO");
                 java.util.Date date = rs.getTimestamp("ODate");
-                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
-                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
-                int lid=rs.getInt("LID");
-                List<Code> codeList = queryCode(-1, null, false, null, ono);
-                List<String> codePathList = new ArrayList<>(codeList.size());
-                List<Integer> codeIDList = new ArrayList<>(codeList.size());
-                for (int i = 0; i < codePathList.size(); i++) {
-                    codePathList.add(codeList.get(i).getFilename());
-                    codeIDList.add(codeList.get(i).getCno());
-                }
+//                TestHost testHost = (TestHost) queryHost(rs.getInt("targetTHost"), Constants.TESTHOST).get(0);
+//                PHostGroup targetGroup =queryGroup(rs.getInt("targetGroup"));
+                int lid = rs.getInt("LID");
+//                List<Code> codeList = queryCode(-1, null, false, null, ono);
+//                List<String> codePathList = new ArrayList<>(codeList.size());
+//                List<Integer> codeIDList = new ArrayList<>(codeList.size());
+//                for (int i = 0; i < codePathList.size(); i++) {
+//                    codePathList.add(codeList.get(i).getFilename());
+//                    codeIDList.add(codeList.get(i).getCno());
+//                }
                 String name = rs.getString("oname");
                 boolean isReleased = rs.getBoolean("isReleased");
-                dporders.add(new DeployOrder(ono, name, date, testHost, targetGroup, codePathList, codeIDList, isReleased,lid));
+                dporder = new DeployOrder(ono, name, date, null, null, null, null, isReleased, lid);
             }
+            return dporder;
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
-        return dporders;
+
     }
 
     public int insertOrder(DeployOrder order) {/////LID
