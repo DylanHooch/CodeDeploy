@@ -36,30 +36,40 @@
 <table  class="table table-hover"  >
     <thead >
     <tr>
-        <th>选择</th>
         <th>订单名称</th>
         <th>目标机备份</th>
         <th>发布状态</th>
+        <th>备份状态</th>
         <th>订单创建日期</th>
     </tr>
     </thead>
     <tbody>
     <% if(orders!=null){
         for(DeployOrder order : orders ) {%>        <tr>
-        <td><input type="radio" name="selecttr" checked="checked" /></td>
         <td><%= order.getName()%></td>
-        <td>
+        <td >
             <%if(order.isReleased()==true) {%>
+            <% if(order.IsRollBack()==0){%>
             已备份
-            <%}else {%>
+            <%} if(order.IsRollBack()==1){%>
+            未备份
+            <%}}if(order.isReleased()==false) {%>
             未备份
             <%}%>
         </td>
         <td>
             <%if(order.isReleased()==true) {%>
             已发布
-            <%}else {%>
+
+            <%}if(order.isReleased()==false) {%>
             未发布
+            <%}%>
+        </td>
+        <td>
+            <%if(order.IsRollBack()==0) {%>
+            未回滚
+            <%}if(order.IsRollBack()==1){%>
+            已回滚
             <%}%>
         </td>
 

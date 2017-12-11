@@ -7,6 +7,14 @@
 
 
     <servlet>
+        <servlet-name>rollbackorder</servlet-name>
+        <servlet-class>codedeploy.servlet.RollBackServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rollbackorder</servlet-name>
+        <url-pattern>/orderrollback</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>releaseorder</servlet-name>
         <servlet-class>codedeploy.servlet.ReleaseServlet</servlet-class>
     </servlet>
