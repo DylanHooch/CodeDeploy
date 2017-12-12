@@ -168,6 +168,12 @@
                 rollback(id);
             }
         }
+        else if(num==3)
+        {
+            result=confirm("确定删除该订单吗？")
+
+        }
+
     }
     function rollback(id)
     {
@@ -193,6 +199,17 @@
                 $("#fullorderlist").html(data);
             }
         });
+    }
+    function deleteOrder(id)
+    {
+        $.ajax({
+            url:"/order_delete?id="+id,
+            tyep:"get",
+            success:function(data){
+                alert("已删除")
+                $("#fullorderlist").html(data);
+            }
+        })
     }
 </script>
 

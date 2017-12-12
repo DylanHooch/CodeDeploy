@@ -143,11 +143,17 @@ public class CodeDeploySystem {
         }//拿到order对应的codeList
         List<Host> hosts=dbo.queryHostbyGID(order.getTargetGroup().getId());
         //把备份直接传到订单对应的组下的所有主机
+
         for(i=0;i<codeList.size();i++)
         {
             Code code=codeList.get(i);
+            String[] tmp=code.getFilename().split("/");
+            String codeName=tmp[tmp.length-1];
+            String codePath="";
+            for(int j=0;j<tmp.length-1;j++)
+                codePath+=tmp[j]+"/";
             for(int j=0;j<hosts.size();j++){
-                ffu.sendFile(code.getFilename(),hosts.get(j),"22",code.getFilename()+code.getFilename());
+                ffu.sendFile(codePath,hosts.get(j),"22","backup\\"+codeName);
             }
         }
 
