@@ -567,7 +567,17 @@ public class DBOperationUtil {
         PreparedStatement prstmt = null;
         if (type == Constants.LOCALHOST) {
             try {
-                String sql = "DELETE FROM  `codedeployment`.`localhost` " + " WHERE LID = ?";
+                String sql = "DELETE FROM  `codedeployment`.`lt` " + " WHERE LID = ?";
+                prstmt = connectDB().prepareStatement(sql);
+                prstmt.setInt(1, ID);
+                prstmt.executeUpdate();
+                prstmt.close();
+                sql = "DELETE FROM  `codedeployment`.`lp` " + " WHERE LID = ?";
+                prstmt = connectDB().prepareStatement(sql);
+                prstmt.setInt(1, ID);
+                prstmt.executeUpdate();
+                prstmt.close();
+                sql = "DELETE FROM  `codedeployment`.`localhost` " + " WHERE LID = ?";
                 prstmt = connectDB().prepareStatement(sql);
                 prstmt.setInt(1, ID);
                 prstmt.executeUpdate();
@@ -583,7 +593,11 @@ public class DBOperationUtil {
 
         } else if (type == Constants.TESTHOST) {
             try {
-                String sql = "DELETE FROM `codedeployment`.`testhost` " + "WHERE TID = ?";
+                String sql = "DELETE FROM `codedeployment`.`lt` " + "WHERE TID = ?";
+                prstmt = connectDB().prepareStatement(sql);
+                prstmt.setInt(1, ID);
+                prstmt.executeUpdate();
+                sql = "DELETE FROM `codedeployment`.`testhost` " + "WHERE TID = ?";
                 prstmt = connectDB().prepareStatement(sql);
                 prstmt.setInt(1, ID);
                 prstmt.executeUpdate();
@@ -598,7 +612,11 @@ public class DBOperationUtil {
             }
         } else if (type == Constants.PRODUCTHOST) {
             try {
-                String sql = "DELETE FROM `codedeployment`.`producthost` " + "WHERE PID = ?";
+                String sql = "DELETE FROM `codedeployment`.`lp` " + "WHERE PID = ?";
+                prstmt = connectDB().prepareStatement(sql);
+                prstmt.setInt(1, ID);
+                prstmt.executeUpdate();
+                sql = "DELETE FROM `codedeployment`.`producthost` " + "WHERE PID = ?";
                 prstmt = connectDB().prepareStatement(sql);
                 prstmt.setInt(1, ID);
                 prstmt.executeUpdate();

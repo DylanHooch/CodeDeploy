@@ -3,11 +3,13 @@ package codedeploy.action;
 import codedeploy.CodeDeploySystem;
 import codedeploy.bean.*;
 import codedeploy.util.DBOperationUtil;
+import codedeploy.util.FetchFileUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.Map;
 public class OrderAction extends ActionSupport{
     DeployOrder order;
     DBOperationUtil dbo;
-    String basepath="/code";
+    String basepath="/tmp/code";
     int tid;
     String oname;
     String filenames;
@@ -83,10 +85,12 @@ public class OrderAction extends ActionSupport{
 //        int gid = Integer.parseInt(request.getParameter("gid"));
 
 
-        String[] filelist=filenames.split("\n+");
+        String[] filelist=filenames.split("[\r\n]+");
+        System.out.println(filelist.length);
         List<String> pathlist=new ArrayList<>();
         for(int i=0;i<filelist.length;i++){
             pathlist.add(basepath+"/"+filelist[i]);
+            System.out.println(filelist[i]);
         }
         Date date=new Date();
         List<Host> tHosts=dbo.queryHost(tid, Constants.TESTHOST);
@@ -96,9 +100,24 @@ public class OrderAction extends ActionSupport{
             return ERROR;
         order=new DeployOrder(0,oname,date,tHost,pHosts,pathlist,false);
         dbo.insertOrder(order);
+        order=dbo.queryOrderByName(oname).get(0);
+
+        File dir = new File("temp\\");
+        if (dir.exists()) {
+            System.out.println(dir.getAbsolutePath());
+        }
+        //创建目录
+        else {
+            dir.mkdirs();
+        }
+        FetchFileUtil ffu=new FetchFileUtil();
         List<Code> codes=new ArrayList<>();
         for(String s:pathlist){
-            codes.add(new Code(-1,s,false,"",ono));
+            ffu.getFile("temp\\",tHost,"22",s);
+            String tmp[]=s.split("/");
+            String codename=tmp[tmp.length-1];
+            String md5=ffu.calcMD5("temp\\"+codename);
+            codes.add(new Code(-1,s,false,md5,order.getOno()));
         }
         dbo.insertCode(codes);
         List<DeployOrder> orders=dbo.queryOrder(0);

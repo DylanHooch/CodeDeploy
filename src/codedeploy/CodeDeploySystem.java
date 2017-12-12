@@ -21,7 +21,7 @@ public class CodeDeploySystem {
         //获取本机的IP
         try {
             Enumeration allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-            InetAddress ip = null;
+            InetAddress ip;
             while (allNetInterfaces.hasMoreElements()) {
                 NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
                 System.out.println(netInterface.getName());
@@ -52,7 +52,7 @@ public class CodeDeploySystem {
         Host thost=order.getTargetTHost();
         for(int i=0;i<fpaths.size();i++){
             String filepath=fpaths.get(i);
-            int ret=ffu.getFile("~//Document//temp",thost,"",filepath);
+            int ret=ffu.getFile("~/Document/temp",thost,"",filepath);
 
             if(ret==Constants.FAILURE){
                 return Constants.FAILURE;
@@ -68,18 +68,25 @@ public class CodeDeploySystem {
         FetchFileUtil ffu=new FetchFileUtil();
         DeployOrder order=dbo.queryOrderByID(id);
         List<Code> codes=dbo.queryCode(-1,"",null,"",id);
-        String tempDir="temp"+File.separator;
+        String tempDir="temp\\";
         String[] tmp;
-        String backupDir="backup"+File.separator;
-        List<Host> productHosts=dbo.queryHost(order.getTargetGroup().getId(),Constants.PHOSTGROUP);
+        String backupDir="backup\\";
+        File file=new File(backupDir);
+        if(file.exists())
+        {
+            System.out.println(file.getAbsolutePath());
+        }
+        else file.mkdirs();
+
+        List<Host> productHosts=dbo.queryHostbyGID(order.getTargetGroup().getId());
         for(Code code: codes)
         {
-            tmp=code.getFilename().split(File.separator);
-            String codeName=tmp[tmp.length];
+            tmp=code.getFilename().split("/");
+            String codeName=tmp[tmp.length-1];
             String codePath="";
             for(int i=0;i<tmp.length-1;i++)
-                codePath+=tmp[i];
-            File file=new File(tempDir+codeName);
+                codePath+=tmp[i]+"/";
+            file=new File(tempDir+codeName);
             boolean flag=true;
             if(file.exists())
             {
@@ -92,17 +99,17 @@ public class CodeDeploySystem {
             if(flag)//需要重新抓取代码
             {
                 String md5;
-                do { ;
-                    ffu.getFile("temp"+File.separator,order.getTargetTHost(),"8889",code.getFilename());
+                do {
+                    ffu.getFile(tempDir,order.getTargetTHost(),"22",code.getFilename());
                     md5=ffu.calcMD5(tempDir+codeName);
                 }while(!md5.equals(code.getMd5()));
             }
             //备份
             for(Host host : productHosts)
             {
-                ffu.getFile(codePath,host,"8889",backupDir);
+                ffu.getFile(backupDir,host,"22",code.getFilename());
                 //代码上线
-                ffu.sendFile(codePath,host,"8889",tempDir+codeName);
+                ffu.sendFile(codePath,host,"22",tempDir+codeName);
             }
         }
 
@@ -134,7 +141,7 @@ public class CodeDeploySystem {
             //codeList.addAll(dbo.queryCode(codeIDList.get(i),"", null, "", id));
             dbo.updateCodeisNotBackup(codeList.get(i).getCno());//修改数据库备份状态
         }//拿到order对应的codeList
-        List<Host> hosts=dbo.queryHost(order.getTargetGroup().getId(),Constants.PHOSTGROUP);
+        List<Host> hosts=dbo.queryHostbyGID(order.getTargetGroup().getId());
         //把备份直接传到订单对应的组下的所有主机
         for(i=0;i<codeList.size();i++)
         {

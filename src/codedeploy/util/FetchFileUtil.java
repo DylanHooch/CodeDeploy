@@ -20,6 +20,7 @@ public class FetchFileUtil {
         SftpChannelUtil channelUtil=new SftpChannelUtil();
         try{
             ChannelSftp channelSftp=channelUtil.getChannel(timeout,srcHost.getAddress(),port,username,password);
+            System.out.println(filePath);
             channelSftp.get(filePath,dstFolderPath);
             channelUtil.closeChannel();
             return Constants.SUCCESS;

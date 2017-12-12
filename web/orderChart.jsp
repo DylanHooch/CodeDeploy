@@ -56,7 +56,6 @@
         <button class="btn btn-outline-secondary" type="button" onclick="alert('检测')">检测</button>
     </div>
     <p></p>
-    `
     <table id="table1" class="table table-hover table-bordered table-responsive" >
         <thead >
         <tr>
@@ -178,7 +177,7 @@
             success:function(){
                 //$("#rb_state").text("已回滚");
                 //find(document.getElementsByName("idd").text()));
-                alert("777")
+                alert("已回滚")
 
             }
         });
@@ -188,9 +187,10 @@
         $.ajax({
             url:"/orderrelease?id="+id,
             type:"get",
-            success:function(){
+            success:function(data){
                 //$("#rb_state").text("已回滚");
-                alert("6666")
+                alert("已发布")
+                $("#fullorderlist").html(data);
             }
         });
     }
