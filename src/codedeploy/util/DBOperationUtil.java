@@ -16,12 +16,12 @@ public class DBOperationUtil {
     private static Connection connectDB() {
         if (connection == null) {
             String driverName = "com.mysql.jdbc.Driver";
-            String dbURL = "jdbc:mysql://rm-wz9h00p5lzhh2mkbjao.mysql.rds.aliyuncs.com:3306";
+            String dbURL = "";
             String sqltype = "mysql";
             try {
 
                 Class.forName(driverName);
-                Connection dbConn = DriverManager.getConnection(dbURL, "root", "123456qwerty!");
+                Connection dbConn = DriverManager.getConnection(dbURL, "", "");
                 return dbConn;
 
             } catch (Exception e)
