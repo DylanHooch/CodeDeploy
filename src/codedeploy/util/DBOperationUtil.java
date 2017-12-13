@@ -838,7 +838,16 @@ public class DBOperationUtil {
 
     public int deleteOrder(int ono){
         PreparedStatement prstmt = null;
-        String sql="DELETE FROM `codedeployment`.`ORDERS` "+" WHERE ONO = ?";
+        String sql="DELETE FROM `codedeployment`.`codes` "+" WHERE ONO = ?";
+        try {
+            prstmt = connectDB().prepareStatement(sql);
+            prstmt.setInt(1, ono);
+            prstmt.execute();
+            prstmt.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        sql="DELETE FROM `codedeployment`.`ORDERS` "+" WHERE ONO = ?";
         try {
             prstmt = connectDB().prepareStatement(sql);
             prstmt.setInt(1, ono);
